@@ -8,6 +8,5 @@ ADDR_OSC = "USB0::0x0957::0x1744::MY44001615::0::INSTR"
 A = test_script.VisaResourceManager()
 A.openRM(ADDR_DMM)
 
-
 B = test_script.saveimg(ADDR_DMM)
 B.test()
