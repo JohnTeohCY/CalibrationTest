@@ -16,7 +16,7 @@ class xlreport(object):
         """ "Initialize certain parameter for the excel sheet such as font, colour
         fill, the path where the excel path is also generated here.
 
-        Excel files are generated in Excel files Folder in this repository.
+        Excel files are generated in excel_output Folder in this repository.
 
 
         """
@@ -29,7 +29,7 @@ class xlreport(object):
             start_color="FFAAFF00", end_color="FFAAFF00", fill_type="solid"
         )
         self.path = (
-            r"C://Users//johnteoh//Documents//VS code//CalibrationTest//Excel Files//"
+            r"excel_output//"
             + datetime.datetime.now().strftime("%Y-%m-%d--%H-%M-%S")
             + ".xlsx"
         )

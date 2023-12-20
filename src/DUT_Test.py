@@ -1,8 +1,8 @@
-""" Module containing all of the test options available in this program. 
+""" Module containing all of the test options available in this program.
 
-    The tests are categorized into different classes. 
+    The tests are categorized into different classes.
     Notes: Tests RiseFallTime & ProgrammingSpeed are only compatible with
-    certain Oscilloscopes using the Keysight Library. Hence, the default 
+    certain Oscilloscopes using the Keysight Library. Hence, the default
     library is only set to Keysight
 
 """
@@ -13,11 +13,11 @@ from time import sleep
 
 sys.path.insert(
     1,
-    r"C://Users//johnteoh//Documents//VS code//CalibrationTest//library"
+    r"library//"
 )
 
 
-from IEEEStandard import OPC, WAI, TRG, RST
+from library.IEEEStandard import OPC, WAI, TRG, RST
 
 
 class Dimport:
@@ -291,9 +291,9 @@ class VoltageMeasurement:
                     if status_I == 8704.0 and status_V == 8704.0:
                         self.dataList.insert(
                             k, [
-                                float(Fetch(dict["DMM_V"]).query()), 
-                                float(Fetch(dict["DMM_I"]).query()), 
-                                float(Measure(dict["PSU"]).test_V()), 
+                                float(Fetch(dict["DMM_V"]).query()),
+                                float(Fetch(dict["DMM_I"]).query()),
+                                float(Measure(dict["PSU"]).test_V()),
                                 float(Measure(dict["PSU"]).test_I())
                                 ]
                         )
@@ -302,9 +302,9 @@ class VoltageMeasurement:
                     elif status_I == 512.0 and status_V == 512.0:
                         self.dataList.insert(
                             k, [
-                                float(Fetch(dict["DMM_V"]).query()), 
-                                float(Fetch(dict["DMM_I"]).query()), 
-                                float(Measure(dict["PSU"]).test_V()), 
+                                float(Fetch(dict["DMM_V"]).query()),
+                                float(Fetch(dict["DMM_I"]).query()),
+                                float(Measure(dict["PSU"]).test_V()),
                                 float(Measure(dict["PSU"]).test_I())
                                 ]
                         )
@@ -647,9 +647,9 @@ class CurrentMeasurement:
                     if status_I == 8704.0 and status_V == 8704.0:
                         dataList.insert(
                             k, [
-                                float(Fetch(dict["DMM_V"]).query()), 
-                                float(Fetch(dict["DMM_I"]).query()), 
-                                float(Measure(dict["PSU"]).test_V()), 
+                                float(Fetch(dict["DMM_V"]).query()),
+                                float(Fetch(dict["DMM_I"]).query()),
+                                float(Measure(dict["PSU"]).test_V()),
                                 float(Measure(dict["PSU"]).test_I())
                                 ]
                         )
@@ -658,9 +658,9 @@ class CurrentMeasurement:
                     elif status_I == 512.0 and status_V == 512.0:
                         dataList.insert(
                             k, [
-                                float(Fetch(dict["DMM_V"]).query()), 
-                                float(Fetch(dict["DMM_I"]).query()), 
-                                float(Measure(dict["PSU"]).test_V()), 
+                                float(Fetch(dict["DMM_V"]).query()),
+                                float(Fetch(dict["DMM_I"]).query()),
+                                float(Measure(dict["PSU"]).test_V()),
                                 float(Measure(dict["PSU"]).test_I())
                                 ]
                         )

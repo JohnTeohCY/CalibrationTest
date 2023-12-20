@@ -1,20 +1,15 @@
 """ This module contains all of the data processing and visualization tools and functions
 
-    The module mainly uses maltplotlib to plot graphs and pandas to process the data. 
+    The module mainly uses maltplotlib to plot graphs and pandas to process the data.
 
 """
 
-import sys
-import pandas as pd
 from matplotlib import pyplot as plt
 import numpy as np
+import pandas as pd
 
-sys.path.insert(
-    1,
-    r"C://Users//johnteoh//Documents//VS code//CalibrationTest//library"
-)
-from IEEEStandard import IDN
-from Keysight import System
+from library.IEEEStandard import IDN
+from library.Keysight import System
 
 
 class datatoCSV_Accuracy(object):
