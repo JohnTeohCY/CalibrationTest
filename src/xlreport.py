@@ -29,7 +29,7 @@ class xlreport(object):
             start_color="FFAAFF00", end_color="FFAAFF00", fill_type="solid"
         )
         self.path = (
-            r"C://Users//johnteoh//Documents//VS code//PyVisa//PyVisa_ORI//Excel Files//"
+            r"C://Users//johnteoh//Documents//VS code//CalibrationTest//Excel Files//"
             + datetime.datetime.now().strftime("%Y-%m-%d--%H-%M-%S")
             + ".xlsx"
         )

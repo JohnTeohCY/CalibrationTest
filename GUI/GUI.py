@@ -29,7 +29,7 @@ desp_font = QFont("Arial", 10)
 desp_font.setWeight(QFont.Bold)
 sys.path.insert(
     1,
-    r"C://Users//johnteoh//Documents//VS code//PyVisa//PyVisa_ORI//src"
+    r"C://Users//johnteoh//Documents//VS code//CalibrationTest//src"
 )
 
 from DUT_Test import (
@@ -75,7 +75,7 @@ class tab(QTabWidget):
 
     def VoltageAccuracyUI(self):
         pixmap_VoltageAccuracy = QPixmap(
-            "C://Users//johnteoh//Documents//VS code//PyVisa//PyVisa_ORI//GUI//img//1.png"
+            "C://Users//johnteoh//Documents//VS code//CalibrationTest//GUI//img//1.png"
         )
         pixmap_VoltageAccuracy = pixmap_VoltageAccuracy.scaled(
             800, 600, Qt.KeepAspectRatio, Qt.FastTransformation
@@ -90,7 +90,7 @@ class tab(QTabWidget):
 
     def CurrentAccuracyUI(self):
         pixmap_CurrentAccuracy = QPixmap(
-            "C://Users//johnteoh//Documents//VS code//PyVisa//PyVisa_ORI//GUI//img//2.png"
+            "C://Users//johnteoh//Documents//VS code//CalibrationTest//GUI//img//2.png"
         )
         pixmap_CurrentAccuracy = pixmap_CurrentAccuracy.scaled(
             800, 600, Qt.KeepAspectRatio, Qt.FastTransformation
@@ -105,7 +105,7 @@ class tab(QTabWidget):
 
     def CV_LoadRegulationUI(self):
         pixmap_LoadRegulationCV = QPixmap(
-            "C://Users//johnteoh//Documents//VS code//PyVisa//PyVisa_ORI//GUI//img//3.png"
+            "C://Users//johnteoh//Documents//VS code//CalibrationTest//GUI//img//3.png"
         )
         pixmap_LoadRegulationCV = pixmap_LoadRegulationCV.scaled(
             800, 600, Qt.KeepAspectRatio, Qt.FastTransformation
@@ -120,7 +120,7 @@ class tab(QTabWidget):
 
     def CC_LoadRegulationUI(self):
         pixmap_LoadRegulationCC = QPixmap(
-            "C://Users//johnteoh//Documents//VS code//PyVisa//PyVisa_ORI//GUI//img//4.png"
+            "C://Users//johnteoh//Documents//VS code//CalibrationTest//GUI//img//4.png"
         )
         pixmap_LoadRegulationCC = pixmap_LoadRegulationCC.scaled(
             800, 550, Qt.KeepAspectRatio, Qt.FastTransformation
@@ -135,7 +135,7 @@ class tab(QTabWidget):
 
     def TransientRecoveryTime(self):
         pixmap_TransientRecoveryTime = QPixmap(
-            "C://Users//johnteoh//Documents//VS code//PyVisa//PyVisa_ORI//GUI//img//5.png"
+            "C://Users//johnteoh//Documents//VS code//CalibrationTest//GUI//img//5.png"
         )
         pixmap_TransientRecoveryTime = pixmap_TransientRecoveryTime.scaled(
             800, 550, Qt.KeepAspectRatio, Qt.FastTransformation
@@ -150,7 +150,7 @@ class tab(QTabWidget):
 
     def ProgrammingSpeed(self):
         pixmap_ProgrammingSpeed = QPixmap(
-            "C://Users//johnteoh//Documents//VS code//PyVisa//PyVisa_ORI//GUI//img//6.png"
+            "C://Users//johnteoh//Documents//VS code//CalibrationTest//GUI//img//6.png"
         )
         pixmap_ProgrammingSpeed = pixmap_ProgrammingSpeed.scaled(
             700, 450, Qt.KeepAspectRatio, Qt.FastTransformation

@@ -13,7 +13,7 @@ from time import sleep
 
 sys.path.insert(
     1,
-    r"C://Users//johnteoh//Documents//VS code//PyVisa//PyVisa_ORI//library"
+    r"C://Users//johnteoh//Documents//VS code//CalibrationTest//library"
 )
 
 

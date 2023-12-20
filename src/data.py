@@ -11,7 +11,7 @@ import numpy as np
 
 sys.path.insert(
     1,
-    r"C://Users//johnteoh//Documents//VS code//PyVisa//PyVisa_ORI//library"
+    r"C://Users//johnteoh//Documents//VS code//CalibrationTest//library"
 )
 from IEEEStandard import IDN
 from Keysight import System
