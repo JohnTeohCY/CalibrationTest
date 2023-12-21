@@ -41,7 +41,7 @@ class xlreport(object):
             worksheet: string specifying which worksheet the column width to be changed.
             value: integer specifiying the width value to be changed to.
         """
-        for x in ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K","L","M","N","O","P","Q","R","S","T","U", "V"]:
+        for x in ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K","L","M","N","O","P","Q","R","S","T","U","V", "W", "X", "Y", "Z"]:
             worksheet.column_dimensions[x].width = value
 
     def alignCell(self, worksheet, row_number, column_number, style):
@@ -85,8 +85,8 @@ class xlreport(object):
             df4.to_excel(writer, sheet_name="Data", index=False, startrow=7)
             wb = writer.book
             ws = wb["Data"]
-            cellref = "T9:T" + str(ws.max_row)
-            cellref2 = "V9:V" + str(ws.max_row)
+            cellref = "U9:U" + str(ws.max_row)
+            cellref2 = "W9:W" + str(ws.max_row)
 
             # Conditional Formatting to set Font and Colour of Cell depending on boolList
             ws.conditional_formatting.add(
@@ -142,7 +142,7 @@ class xlreport(object):
 
             # Inserting graph of test into excel report
             img = openpyxl.drawing.image.Image("images/Chart.png")
-            img.anchor = "W1"
+            img.anchor = "X1"
             ws.add_image(img)
 
             wb.save(self.path)

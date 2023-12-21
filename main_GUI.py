@@ -650,7 +650,7 @@ class VoltageMeasurementDialog(QDialog):
 
             if self.checkbox_data_Report == 2:
                 instrumentData(self.PSU, self.DMM_V, self.ELoad)
-                datatoCSV_Accuracy(infoList, dataList)
+                datatoCSV_Accuracy(infoList, dataList, flag=1)
                 datatoGraph(infoList, dataList)
                 datatoGraph.scatterCompareVoltage(
                     self, float(self.Prog_Accuracy_Gain), float(self.Prog_Accuracy_Offset), float(self.Rdbk_Accuracy_Gain), float(self.Rdbk_Accuracy_Offset)
@@ -1098,7 +1098,7 @@ class CurrentMeasurementDialog(QDialog):
 
             if self.checkbox_data_Report == 2:
                 instrumentData(self.PSU, self.DMM_I, self.ELoad)
-                datatoCSV_Accuracy(infoList, dataList)
+                datatoCSV_Accuracy(infoList, dataList, flag=2)
                 datatoGraph(infoList, dataList)
                 datatoGraph.scatterCompareCurrent(
                     self, float(self.Prog_Accuracy_Gain), float(self.Prog_Accuracy_Offset), float(self.Rdbk_Accuracy_Gain), float(self.Rdbk_Accuracy_Offset)

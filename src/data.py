@@ -21,7 +21,7 @@ class datatoCSV_Accuracy(object):
 
     """
 
-    def __init__(self, infoList, dataList):
+    def __init__(self, infoList, dataList, flag):
         """This function initializes the preprocessing of data and generate CSV file
 
             This function begins by extracting the list provided as an arguement into
@@ -49,6 +49,7 @@ class datatoCSV_Accuracy(object):
         Iset = pd.Series(self.column(infoList, 1))
         Key = pd.Series(self.column(infoList, 2))
         Mode = pd.Series(self.column(infoList, 3))
+        VIfix = pd.Series(self.column(infoList, 4))
 
         Vmeasured = pd.Series(self.column(dataList, 0))
         Imeasured = pd.Series(self.column(dataList, 1))
@@ -67,8 +68,15 @@ class datatoCSV_Accuracy(object):
         Irdbk_error = Iset - Ireadback
         IPrdbk_error = Irdbk_error / Iset * 100
 
-        VsetF = Vset.to_frame(name="Voltage Set")
-        IsetF = Iset.to_frame(name="Current Set")
+        if flag == 1:
+            VsetF = Vset.to_frame(name="Voltage Set (PS)")
+            IsetF = Iset.to_frame(name="Current Set (EL)")
+            VIfixF = VIfix.to_frame(name="Current set (PS)")
+        elif flag == 2:
+            VsetF = Vset.to_frame(name="Voltage Set (EL)")
+            IsetF = Iset.to_frame(name="Current Set (PS)")
+            VIfixF = VIfix.to_frame(name="Voltage set (PS)")
+
         keyF = Key.to_frame(name="key")
         modeF = Mode.to_frame(name="Mode")
         VreadbackF = Vreadback.to_frame(name="Voltage Rdbk")
@@ -90,6 +98,7 @@ class datatoCSV_Accuracy(object):
             [
                 VsetF,
                 IsetF,
+                VIfixF,
                 modeF,
                 VreadbackF,
                 IreadbackF,

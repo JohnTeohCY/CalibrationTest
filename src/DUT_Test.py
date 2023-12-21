@@ -273,7 +273,7 @@ class VoltageMeasurement:
                 if mode == "+1\n": mode = "CV"
                 elif mode == "+2\n": mode = "CC"
                 else:mode = "Unknown"
-                self.infoList.insert(k, [V, I_fixed, i, mode])
+                self.infoList.insert(k, [V, I_fixed, i, mode, I])
 
                 WAI(dict["PSU"])
                 Delay(dict["PSU"]).write(dict["UpTime"])
@@ -629,7 +629,7 @@ class CurrentMeasurement:
                 elif mode == "+2\n": mode = "CC"
                 else:mode = "Unknown"
 
-                infoList.insert(k, [V_fixed, I, i, mode])
+                infoList.insert(k, [V_fixed, I, i, mode, V])
 
                 WAI(dict["PSU"])
                 Delay(dict["PSU"]).write(dict["UpTime"])
