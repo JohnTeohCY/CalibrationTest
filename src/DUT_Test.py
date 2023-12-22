@@ -292,7 +292,7 @@ class VoltageMeasurement:
                         self.dataList.insert(
                             k, [
                                 float(Fetch(dict["DMM_V"]).query()),
-                                float(Fetch(dict["DMM_I"]).query()),
+                                (float(Fetch(dict["DMM_I"]).query())/float(dict["shuntResistance"])),
                                 float(Measure(dict["PSU"]).test_V()),
                                 float(Measure(dict["PSU"]).test_I())
                                 ]
@@ -303,7 +303,7 @@ class VoltageMeasurement:
                         self.dataList.insert(
                             k, [
                                 float(Fetch(dict["DMM_V"]).query()),
-                                float(Fetch(dict["DMM_I"]).query()),
+                                (float(Fetch(dict["DMM_I"]).query())/float(dict["shuntResistance"])),
                                 float(Measure(dict["PSU"]).test_V()),
                                 float(Measure(dict["PSU"]).test_I())
                                 ]
@@ -648,7 +648,7 @@ class CurrentMeasurement:
                         dataList.insert(
                             k, [
                                 float(Fetch(dict["DMM_V"]).query()),
-                                float(Fetch(dict["DMM_I"]).query()),
+                                (float(Fetch(dict["DMM_I"]).query())/float(dict["shuntResistance"])),
                                 float(Measure(dict["PSU"]).test_V()),
                                 float(Measure(dict["PSU"]).test_I())
                                 ]
@@ -659,7 +659,7 @@ class CurrentMeasurement:
                         dataList.insert(
                             k, [
                                 float(Fetch(dict["DMM_V"]).query()),
-                                float(Fetch(dict["DMM_I"]).query()),
+                                (float(Fetch(dict["DMM_I"]).query())/float(dict["shuntResistance"])),
                                 float(Measure(dict["PSU"]).test_V()),
                                 float(Measure(dict["PSU"]).test_I())
                                 ]

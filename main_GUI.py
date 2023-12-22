@@ -258,15 +258,18 @@ class VoltageMeasurementDialog(QDialog):
         Desp2 = QLabel()
         Desp3 = QLabel()
         Desp4 = QLabel()
+        Desp5 = QLabel()
         Desp1.setFont(desp_font)
         Desp2.setFont(desp_font)
         Desp3.setFont(desp_font)
         Desp4.setFont(desp_font)
+        Desp5.setFont(desp_font)
 
         Desp1.setText("Connections:")
         Desp2.setText("General Settings:")
         Desp3.setText("Voltage Sweep:")
         Desp4.setText("Current Sweep:")
+        Desp5.setText("Shunt:")
 
         # Connections
         QLabel_PSU_VisaAddress = QLabel()
@@ -329,6 +332,11 @@ class VoltageMeasurementDialog(QDialog):
         QComboBox_set_Function.setEnabled(False)
         QComboBox_Voltage_Sense.addItems(["2 Wire", "4 Wire"])
 
+        # Shunt 
+        QLabel_Shunt = QLabel()
+        QLabel_Shunt.setText("Resistance (Ohm):")
+        QLineEdit_Shunt = QLineEdit()
+
         # Current Sweep
         QLabel_minCurrent = QLabel()
         QLabel_maxCurrent = QLabel()
@@ -368,6 +376,8 @@ class VoltageMeasurementDialog(QDialog):
         layout1.addRow(QLabel_Prog_Accuracy_Offset, QLineEdit_Prog_Accuracy_Offset)
         layout1.addRow(QLabel_Rdbk_Accuracy_Gain, QLineEdit_Rdbk_Accuracy_Gain)
         layout1.addRow(QLabel_Rdbk_Accuracy_Offset, QLineEdit_Rdbk_Accuracy_Offset)
+        layout1.addRow(Desp5)
+        layout1.addRow(QLabel_Shunt, QLineEdit_Shunt)
         layout1.addRow(Desp3)
         layout1.addRow(QLabel_minVoltage, QLineEdit_minVoltage)
         layout1.addRow(QLabel_maxVoltage, QLineEdit_maxVoltage)
@@ -387,6 +397,7 @@ class VoltageMeasurementDialog(QDialog):
         self.Prog_Accuracy_Offset = ""
         self.Rdbk_Accuracy_Gain = ""
         self.Rdbk_Accuracy_Offset = ""
+        self.shuntResistance = ""
         self.minCurrent = ""
         self.maxCurrent = ""
         self.current_step_size = ""
@@ -437,6 +448,8 @@ class VoltageMeasurementDialog(QDialog):
         QLineEdit_Rdbk_Accuracy_Gain.textEdited.connect(self.Rdbk_Accuracy_Gain_changed)
         QLineEdit_Rdbk_Accuracy_Offset.textEdited.connect(self.Rdbk_Accuracy_Offset_changed)
 
+        QLineEdit_Shunt.textEdited.connect(self.shuntResistance_changed)
+
         QLineEdit_minVoltage.textEdited.connect(self.minVoltage_changed)
         QLineEdit_maxVoltage.textEdited.connect(self.maxVoltage_changed)
         QLineEdit_minCurrent.textEdited.connect(self.minCurrent_changed)
@@ -486,6 +499,9 @@ class VoltageMeasurementDialog(QDialog):
 
     def Rdbk_Accuracy_Offset_changed(self, s):
         self.Rdbk_Accuracy_Offset = 0.0015
+
+    def shuntResistance_changed(self, s):
+        self.shuntResistance = s
 
     def minVoltage_changed(self, s):
         self.minVoltage = s
@@ -575,6 +591,7 @@ class VoltageMeasurementDialog(QDialog):
             Prog_Accuracy_Offset=self.Prog_Accuracy_Offset,
             Rdbk_Accuracy_Gain=self.Rdbk_Accuracy_Gain,
             Rdbk_Accuracy_Offset=self.Rdbk_Accuracy_Offset,
+            shuntResistance=self.shuntResistance,
 
             minCurrent=self.minCurrent,
             maxCurrent=self.maxCurrent,
@@ -700,15 +717,18 @@ class CurrentMeasurementDialog(QDialog):
         Desp2 = QLabel()
         Desp3 = QLabel()
         Desp4 = QLabel()
+        Desp5 = QLabel()
         Desp1.setFont(desp_font)
         Desp2.setFont(desp_font)
         Desp3.setFont(desp_font)
         Desp4.setFont(desp_font)
+        Desp5.setFont(desp_font)
 
         Desp1.setText("Connections:")
         Desp2.setText("General Settings:")
         Desp3.setText("Voltage Sweep:")
         Desp4.setText("Current Sweep:")
+        Desp5.setText("Shunt:")
 
         # Connections
         QLabel_PSU_VisaAddress = QLabel()
@@ -774,6 +794,11 @@ class CurrentMeasurementDialog(QDialog):
         QComboBox_Current_Sense.addItems(["2 Wire", "4 Wire"])
         QComboBox_Range.addItems(["Auto", "10mA", "100mA", "1A", "3A"])
 
+        # Shunt 
+        QLabel_Shunt = QLabel()
+        QLabel_Shunt.setText("Resistance (Ohm):")
+        QLineEdit_Shunt = QLineEdit()
+
         # Current Sweep
         QLabel_minCurrent = QLabel()
         QLabel_maxCurrent = QLabel()
@@ -816,6 +841,8 @@ class CurrentMeasurementDialog(QDialog):
         layout1.addRow(QLabel_Prog_Accuracy_Offset, QLineEdit_Prog_Accuracy_Offset)
         layout1.addRow(QLabel_Rdbk_Accuracy_Gain, QLineEdit_Rdbk_Accuracy_Gain)
         layout1.addRow(QLabel_Rdbk_Accuracy_Offset, QLineEdit_Rdbk_Accuracy_Offset)
+        layout1.addRow(Desp5)
+        layout1.addRow(QLabel_Shunt, QLineEdit_Shunt)
         layout1.addRow(Desp3)
         layout1.addRow(QLabel_minVoltage, QLineEdit_minVoltage)
         layout1.addRow(QLabel_maxVoltage, QLineEdit_maxVoltage)
@@ -835,6 +862,7 @@ class CurrentMeasurementDialog(QDialog):
         self.Prog_Accuracy_Offset = ""
         self.Rdbk_Accuracy_Gain = ""
         self.Rdbk_Accuracy_Offset = ""
+        self.shuntResistance = ""
         self.minCurrent = ""
         self.maxCurrent = ""
         self.current_step_size = ""
@@ -883,6 +911,7 @@ class CurrentMeasurementDialog(QDialog):
         QLineEdit_Prog_Accuracy_Offset.textEdited.connect(self.Prog_Accuracy_Offset_changed)
         QLineEdit_Rdbk_Accuracy_Gain.textEdited.connect(self.Rdbk_Accuracy_Gain_changed)
         QLineEdit_Rdbk_Accuracy_Offset.textEdited.connect(self.Rdbk_Accuracy_Offset_changed)
+        QLineEdit_Shunt.textEdited.connect(self.shuntResistance_changed)
 
         QLineEdit_minVoltage.textEdited.connect(self.minVoltage_changed)
         QLineEdit_maxVoltage.textEdited.connect(self.maxVoltage_changed)
@@ -933,6 +962,9 @@ class CurrentMeasurementDialog(QDialog):
 
     def Rdbk_Accuracy_Offset_changed(self, s):
         self.Rdbk_Accuracy_Offset = 0.0015
+
+    def shuntResistance_changed(self, s):
+        self.shuntResistance = s
 
     def minVoltage_changed(self, s):
         self.minVoltage = s
@@ -1022,6 +1054,7 @@ class CurrentMeasurementDialog(QDialog):
             Prog_Accuracy_Offset=self.Prog_Accuracy_Offset,
             Rdbk_Accuracy_Gain=self.Rdbk_Accuracy_Gain,
             Rdbk_Accuracy_Offset=self.Rdbk_Accuracy_Offset,
+            shuntResistance=self.shuntResistance,
             minCurrent=self.minCurrent,
             maxCurrent=self.maxCurrent,
             current_step_size=self.current_step_size,
