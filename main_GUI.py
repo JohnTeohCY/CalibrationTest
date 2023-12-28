@@ -66,10 +66,10 @@ class tab(QTabWidget):
 
     def VoltageAccuracyUI(self):
         pixmap_VoltageAccuracy = QPixmap(
-            ".//images//GUI//1.png"
+            ".//images//GUI//1new.png"
         )
         pixmap_VoltageAccuracy = pixmap_VoltageAccuracy.scaled(
-            800, 600, Qt.KeepAspectRatio, Qt.FastTransformation
+            450, 400, Qt.KeepAspectRatio, Qt.FastTransformation
         )
         label_VoltageAccuracy = QLabel()
         label_VoltageAccuracy.setPixmap(pixmap_VoltageAccuracy)
@@ -81,10 +81,10 @@ class tab(QTabWidget):
 
     def CurrentAccuracyUI(self):
         pixmap_CurrentAccuracy = QPixmap(
-            ".//images//GUI//2.png"
+            ".//images//GUI//1new.png"
         )
         pixmap_CurrentAccuracy = pixmap_CurrentAccuracy.scaled(
-            800, 600, Qt.KeepAspectRatio, Qt.FastTransformation
+            450, 400, Qt.KeepAspectRatio, Qt.FastTransformation
         )
         label_CurrentAccuracy = QLabel()
         label_CurrentAccuracy.setPixmap(pixmap_CurrentAccuracy)
