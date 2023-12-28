@@ -56,9 +56,9 @@ Double click on the DUT-test executable file to run the app
 This lists contains the list of Instrument Models/Series that are compatible with this program. Models included in these tables have been tested. 
 | Types of Instrument      | Supported Models (Commmand Set)           |
 | ------------- |:-------------:| 
-| Digital Multimeter (DMM)  | 34405 Digital Multimeters <br> 3446x Series Digital Multimeters <br> Keithley Model 2100|
+| Digital Multimeter (DMM)  | 34470A 7.5 Digit Multimeter <br> 34405 Digital Multimeters <br> 3446x Series Digital Multimeters <br> Keithley Model 2100|
 | Power Supply Unit (PSU)   | E36731A     |
-| Electronic Load (ELoad)   | N6700 Power Supplies      |
+| Electronic Load (ELoad)   | E36731A <br> EL34243A <br> N6700 Power Supplies      |
 | Oscilloscopes             | InfiniiVision 6000 Series Oscilloscopes |
 
 ## User Guide
