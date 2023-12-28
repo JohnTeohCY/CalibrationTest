@@ -21,7 +21,7 @@ class datatoCSV_Accuracy(object):
 
     """
 
-    def __init__(self, infoList, dataList, flag):
+    def __init__(self, infoList, dataList, flag_VI):
         """This function initializes the preprocessing of data and generate CSV file
 
             This function begins by extracting the list provided as an arguement into
@@ -68,11 +68,11 @@ class datatoCSV_Accuracy(object):
         Irdbk_error = Iset - Ireadback
         IPrdbk_error = Irdbk_error / Iset * 100
 
-        if flag == 1:
+        if flag_VI == 1:
             VsetF = Vset.to_frame(name="Voltage Set (PS)")
             IsetF = Iset.to_frame(name="Current Set (EL)")
             VIfixF = VIfix.to_frame(name="Current set (PS)")
-        elif flag == 2:
+        elif flag_VI == 2:
             VsetF = Vset.to_frame(name="Voltage Set (EL)")
             IsetF = Iset.to_frame(name="Current Set (PS)")
             VIfixF = VIfix.to_frame(name="Voltage set (PS)")
@@ -243,8 +243,8 @@ class datatoCSV_Regulation(object):
 class datatoGraph(datatoCSV_Accuracy):
     """Child class of datatoCSV_Accuracy to plot the graph"""
 
-    def __init__(self, infoList, dataList):
-        super().__init__(infoList, dataList)
+    def __init__(self, infoList, dataList, flag_VI):
+        super().__init__(infoList, dataList, flag_VI)
         self.data = pd.read_csv("csv/data.csv")
 
     def errorBoundary(self, param1, param2, UNIT, x, x_err, y):
@@ -314,9 +314,9 @@ class datatoGraph(datatoCSV_Accuracy):
             plt.plot(
                 x,
                 x_err,
-                label="Current = " + str(y.iloc[0]["Current Set"]),
+                label="Current = " + str(y.iloc[0]["Current Set (EL)"]),
             )
-
+            # plt.legend(loc="upper left")
             plt.title(UNIT)
             plt.xlabel("Voltage (V)")
             plt.ylabel("Percentage Error (%)")
@@ -365,9 +365,9 @@ class datatoGraph(datatoCSV_Accuracy):
             plt.plot(
                 x,
                 x_err,
-                label="Voltage = " + str(y.iloc[0]["Voltage Set"]),
+                label="Voltage = " + str(y.iloc[0]["Voltage Set (EL)"]),
             )
-            plt.legend(loc="upper left")
+            # plt.legend(loc="upper left")
             plt.title(UNIT)
             plt.xlabel("Current (A)")
             plt.ylabel("Percentage Error (%)")
@@ -405,8 +405,8 @@ class datatoGraph(datatoCSV_Accuracy):
         conditionC_rdbk = pd.Series()
 
         for x in range(len(grouped_df)):
-            Vset = grouped_df.get_group(x)[["Voltage Set"]]
-            Iset = grouped_df.get_group(x)[["Current Set"]]
+            Vset = grouped_df.get_group(x)[["Voltage Set (PS)"]]
+            Iset = grouped_df.get_group(x)[["Current Set (EL)"]]
             Vpercent_error_meas = grouped_df.get_group(x)[["Volt Meas_Err(%)"]]
             Vpercent_error_rdbk = grouped_df.get_group(x)[["Volt Rdbk_Err(%)"]]
             # Ipercent_error = grouped_df.get_group(x)[["Curr Meas_Err(%)"]]
@@ -485,7 +485,7 @@ class datatoGraph(datatoCSV_Accuracy):
             plt.plot(
                 VsetS,
                 Vpercent_errorS_meas,
-                label="Current = " + str(Iset.iloc[0]["Current Set"]),
+                label="Current = " + str(Iset.iloc[0]["Current Set (EL)"]),
             )
 
             plt.title("Voltage")
@@ -580,8 +580,8 @@ class datatoGraph(datatoCSV_Accuracy):
         conditionC_rdbk = pd.Series()
 
         for x in range(len(grouped_df)):
-            Vset = grouped_df.get_group(x)[["Voltage Set"]]
-            Iset = grouped_df.get_group(x)[["Current Set"]]
+            Vset = grouped_df.get_group(x)[["Voltage Set (EL)"]]
+            Iset = grouped_df.get_group(x)[["Current Set (PS)"]]
             # Vpercent_error = grouped_df.get_group(x)[["Volt Meas_Err(%)"]]
             Ipercent_error_meas = grouped_df.get_group(x)[["Curr Meas_Err(%)"]]
             Ipercent_error_rdbk = grouped_df.get_group(x)[["Curr Meas_Err(%)"]]
@@ -660,7 +660,7 @@ class datatoGraph(datatoCSV_Accuracy):
             plt.plot(
                 IsetS,
                 Ipercent_errorS_meas,
-                label="Voltage = " + str(Vset.iloc[0]["Voltage Set"]),
+                label="Voltage = " + str(Vset.iloc[0]["Voltage Set (EL)"]),
             )
 
             plt.title("Current")
