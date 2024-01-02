@@ -894,18 +894,18 @@ class LoadRegulation:
         # Instrument Initializations
         Configure(dict["DMM"]).write("Voltage")
         Trigger(dict["DMM"]).setSource("BUS")
-        Display(dict["ELoad"]).displayState(dict["ELoad_Channel"])
-        Function(dict["ELoad"]).setMode(dict["setFunction"], dict["ELoad_Channel"])
-        Voltage(dict["PSU"]).setSenseMode(dict["CurrentSense"], dict["PSU_Channel"])
         Voltage(dict["DMM"]).setNPLC(dict["Aperture"])
         Voltage(dict["DMM"]).setAutoZeroMode(dict["AutoZero"])
         Voltage(dict["DMM"]).setAutoImpedanceMode(dict["InputZ"])
 
         if dict["Range"] == "Auto":
             Sense(dict["DMM"]).setVoltageRangeDCAuto()
-
         else:
             Sense(dict["DMM"]).setVoltageRangeDC(dict["Range"])
+
+        Display(dict["ELoad"]).displayState(dict["ELoad_Channel"])
+        Function(dict["ELoad"]).setMode(dict["setFunction"], dict["ELoad_Channel"])
+        Voltage(dict["PSU"]).setSenseMode(dict["CurrentSense"], dict["PSU_Channel"])
 
         self.V_Rating = float(dict["V_Rating"])
         self.I_Rating = float(dict["I_Rating"])
@@ -923,7 +923,9 @@ class LoadRegulation:
         Initiate(dict["DMM"]).initiate()
         TRG(dict["DMM"])
         Delay(dict["PSU"]).write(dict["UpTime"])
+
         V_NL = float(Fetch(dict["DMM"]).query())
+
         Delay(dict["PSU"]).write(dict["DownTime"])
         Current(dict["ELoad"]).setOutputCurrent(I_Max, dict["ELoad_Channel"])
         Output(dict["ELoad"]).setOutputStateC("ON", dict["ELoad_Channel"])
@@ -938,8 +940,10 @@ class LoadRegulation:
 
         Delay(dict["PSU"]).write(dict["DownTime"])
         print("V_NL: ", V_NL, "V_FL: ", V_FL)
+
         Output(dict["ELoad"]).setOutputStateC("OFF", dict["ELoad_Channel"])
         Output(dict["PSU"]).setOutputState("OFF")
+
         Voltage_Regulation = ((V_NL - V_FL) / V_FL) * 100
         Desired_Voltage_Regulation = 30 * self.param1 + self.param2
         print("Desired Voltage Regulation (CV): (%)", Desired_Voltage_Regulation)
@@ -1027,7 +1031,7 @@ class LoadRegulation:
         else:
             Sense(dict["DMM"]).setVoltageRangeDC(dict["Range"])
 
-        self.V_Rating = float(dict["V_Rating"])
+        self.V_Rating = float(dict["V_Rating"]) # + 0.1   # 0.1V is added to prevent ELoad from entering CC Mode
         self.I_Rating = float(dict["I_Rating"])
         self.P_Rating = float(dict["P_Rating"])
         self.param1 = float(dict["Error_Gain"])
@@ -1286,7 +1290,7 @@ class LoadRegulation:
             Sense(dict["DMM"]).setCurrentRangeDC(dict["Range"])
 
         self.V_Rating = float(dict["V_Rating"])
-        self.I_Rating = float(dict["I_Rating"])
+        self.I_Rating = float(dict["I_Rating"]) # + 0.1  # 0.1A is added to prevent ELoad from entering CV Mode
         self.P_Rating = float(dict["P_Rating"])
         self.param1 = float(dict["Error_Gain"])
         self.param2 = float(dict["Error_Offset"])

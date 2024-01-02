@@ -99,7 +99,7 @@ class tab(QTabWidget):
             ".//images//GUI//3.png"
         )
         pixmap_LoadRegulationCV = pixmap_LoadRegulationCV.scaled(
-            800, 600, Qt.KeepAspectRatio, Qt.FastTransformation
+            700, 500, Qt.KeepAspectRatio, Qt.FastTransformation
         )
         label_LoadRegulationCV = QLabel()
         label_LoadRegulationCV.setPixmap(pixmap_LoadRegulationCV)
@@ -114,7 +114,7 @@ class tab(QTabWidget):
             ".//images//GUI//4.png"
         )
         pixmap_LoadRegulationCC = pixmap_LoadRegulationCC.scaled(
-            800, 550, Qt.KeepAspectRatio, Qt.FastTransformation
+            700, 550, Qt.KeepAspectRatio, Qt.FastTransformation
         )
         label_LoadRegulationCC = QLabel()
         label_LoadRegulationCC.setPixmap(pixmap_LoadRegulationCC)
@@ -1564,37 +1564,70 @@ class CV_LoadRegulationDialog(QDialog):
         AdvancedSettingsList[5] = s
 
     def Error_Gain_changed(self, s):
-        self.Error_Gain = s
+        self.Error_Gain = 0.00035
 
     def Error_Offset_changed(self, s):
-        self.Error_Offset = s
+        self.Error_Offset = 0.0015
 
     def Power_Rating_changed(self, s):
-        self.Power_Rating = s
+        self.Power_Rating = 200
 
     def Max_Current_changed(self, s):
-        self.Current_Rating = s
+        self.Current_Rating = 20
 
     def Max_Voltage_changed(self, s):
-        self.Voltage_Rating = s
+        self.Voltage_Rating = 30
 
     def DMM_Instrument_changed(self, s):
         self.DMM_Instrument = s
 
     def PSU_VisaAddress_changed(self, s):
-        self.PSU = s
+        self.PSU = "USB0::0x2A8D::0x5C02::MY62100050::0::INSTR"
 
     def DMM_VisaAddress_changed(self, s):
-        self.DMM = s
+        self.DMM = "USB0::0x2A8D::0x0201::MY57702180::0::INSTR"
 
     def ELoad_VisaAddress_changed(self, s):
-        self.ELoad = s
+        self.ELoad = "USB0::0x2A8D::0x5C02::MY62100065::0::INSTR"
 
     def ELoad_Channel_changed(self, s):
-        self.ELoad_Channel = s
+        self.ELoad_Channel = 1
 
     def PSU_Channel_changed(self, s):
-        self.PSU_Channel = s
+        self.PSU_Channel = 1
+        
+    # def Error_Gain_changed(self, s):
+    #     self.Error_Gain = s
+
+    # def Error_Offset_changed(self, s):
+    #     self.Error_Offset = s
+
+    # def Power_Rating_changed(self, s):
+    #     self.Power_Rating = s
+
+    # def Max_Current_changed(self, s):
+    #     self.Current_Rating = s
+
+    # def Max_Voltage_changed(self, s):
+    #     self.Voltage_Rating = s
+
+    # def DMM_Instrument_changed(self, s):
+    #     self.DMM_Instrument = s
+
+    # def PSU_VisaAddress_changed(self, s):
+    #     self.PSU = s
+
+    # def DMM_VisaAddress_changed(self, s):
+    #     self.DMM = s
+
+    # def ELoad_VisaAddress_changed(self, s):
+    #     self.ELoad = s
+
+    # def ELoad_Channel_changed(self, s):
+    #     self.ELoad_Channel = s
+
+    # def PSU_Channel_changed(self, s):
+    #     self.PSU_Channel = s
 
     def set_Function_changed(self, s):
         if s == "Voltage Priority":
@@ -1887,37 +1920,37 @@ class CC_LoadRegulationDialog(QDialog):
         QPushButton_Widget2.clicked.connect(self.openDialog)
 
     def Error_Gain_changed(self, s):
-        self.Error_Gain = s
+        self.Error_Gain = 0.00035
 
     def Error_Offset_changed(self, s):
-        self.Error_Offset = s
+        self.Error_Offset = 0.0015
 
     def Power_Rating_changed(self, s):
-        self.Power_Rating = s
+        self.Power_Rating = 200
 
     def Max_Current_changed(self, s):
-        self.Current_Rating = s
+        self.Current_Rating = 20
 
     def Max_Voltage_changed(self, s):
-        self.Voltage_Rating = s
+        self.Voltage_Rating = 30
 
     def DMM_Instrument_changed(self, s):
         self.DMM_Instrument = s
 
     def PSU_VisaAddress_changed(self, s):
-        self.PSU = s
+        self.PSU = "USB0::0x2A8D::0x5C02::MY62100050::0::INSTR"
 
     def DMM_VisaAddress_changed(self, s):
-        self.DMM = s
+        self.DMM = "USB0::0x2A8D::0x0201::MY57702180::0::INSTR"
 
     def ELoad_VisaAddress_changed(self, s):
-        self.ELoad = s
+        self.ELoad = "USB0::0x2A8D::0x5C02::MY62100065::0::INSTR"
 
     def ELoad_Channel_changed(self, s):
-        self.ELoad_Channel = s
+        self.ELoad_Channel = 1
 
     def PSU_Channel_changed(self, s):
-        self.PSU_Channel = s
+        self.PSU_Channel = 1
 
     def set_Function_changed(self, s):
         if s == "Voltage Priority":
