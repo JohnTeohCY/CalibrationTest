@@ -891,12 +891,16 @@ class LoadRegulation:
             Oscilloscope,
         ) = Dimport.getClasses(dict["Instrument"])
 
+        print("1")
+
         # Instrument Initializations
         Configure(dict["DMM"]).write("Voltage")
         Trigger(dict["DMM"]).setSource("BUS")
         Voltage(dict["DMM"]).setNPLC(dict["Aperture"])
         Voltage(dict["DMM"]).setAutoZeroMode(dict["AutoZero"])
         Voltage(dict["DMM"]).setAutoImpedanceMode(dict["InputZ"])
+
+
 
         if dict["Range"] == "Auto":
             Sense(dict["DMM"]).setVoltageRangeDCAuto()
@@ -906,6 +910,8 @@ class LoadRegulation:
         Display(dict["ELoad"]).displayState(dict["ELoad_Channel"])
         Function(dict["ELoad"]).setMode(dict["setFunction"], dict["ELoad_Channel"])
         Voltage(dict["PSU"]).setSenseMode(dict["CurrentSense"], dict["PSU_Channel"])
+
+
 
         self.V_Rating = float(dict["V_Rating"])
         self.I_Rating = float(dict["I_Rating"])
@@ -1013,21 +1019,22 @@ class LoadRegulation:
             Voltage,
             Current,
             Oscilloscope,
+            Measure,
         ) = Dimport.getClasses(dict["Instrument"])
 
         # Instruments Initialization
         Configure(dict["DMM"]).write("Voltage")
         Trigger(dict["DMM"]).setSource("BUS")
-        Display(dict["ELoad"]).displayState(dict["ELoad_Channel"])
-        Function(dict["ELoad"]).setMode(dict["setFunction"], dict["ELoad_Channel"])
-        Voltage(dict["PSU"]).setSenseMode(dict["VoltageSense"], dict["PSU_Channel"])
         Voltage(dict["DMM"]).setNPLC(dict["Aperture"])
         Voltage(dict["DMM"]).setAutoZeroMode(dict["AutoZero"])
         Voltage(dict["DMM"]).setAutoImpedanceMode(dict["InputZ"])
 
+        Display(dict["ELoad"]).displayState(dict["ELoad_Channel"])
+        Function(dict["ELoad"]).setMode(dict["setFunction"], dict["ELoad_Channel"])
+        Voltage(dict["PSU"]).setSenseMode(dict["VoltageSense"], dict["PSU_Channel"])
+
         if dict["Range"] == "Auto":
             Sense(dict["DMM"]).setVoltageRangeDCAuto()
-
         else:
             Sense(dict["DMM"]).setVoltageRangeDC(dict["Range"])
 
@@ -1053,7 +1060,6 @@ class LoadRegulation:
             if status == 8704.0:
                 V_NL = float(Fetch(dict["DMM"]).query())
                 break
-
             elif status == 512.0:
                 V_NL = float(Fetch(dict["DMM"]).query())
                 break
@@ -1072,7 +1078,6 @@ class LoadRegulation:
             if status == 8704.0:
                 V_FL = float(Fetch(dict["DMM"]).query())
                 break
-
             elif status == 512.0:
                 V_FL = float(Fetch(dict["DMM"]).query())
                 break
@@ -1084,9 +1089,7 @@ class LoadRegulation:
         Voltage_Regulation = ((V_NL - V_FL) / V_FL) * 100
         Desired_Voltage_Regulation = 30 * self.param1 + self.param2
         print("Desired Load Regulation (CV): (%)", Desired_Voltage_Regulation)
-        print(
-            "Calculated Load Voltage Regulation (CV): (%)", round(Voltage_Regulation, 4)
-        )
+        print("Calculated Load Voltage Regulation (CV): (%)", round(Voltage_Regulation, 4))
 
     def executeCC_LoadRegulationA(self, dict):
         """Test for determining the Load Regulation of DUT under Constant Current (CC) Mode.
@@ -1271,6 +1274,7 @@ class LoadRegulation:
             Voltage,
             Current,
             Oscilloscope,
+            Measure,
         ) = Dimport.getClasses(dict["Instrument"])
 
         # Instruments Initialization
@@ -1330,7 +1334,6 @@ class LoadRegulation:
             if status == 8704.0:
                 I_FL = float(Fetch(dict["DMM"]).query())
                 break
-
             elif status == 512.0:
                 I_FL = float(Fetch(dict["DMM"]).query())
                 break

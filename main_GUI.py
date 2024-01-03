@@ -391,6 +391,7 @@ class VoltageMeasurementDialog(QDialog):
         layout1.addRow(QPushButton_Widget2)
         layout1.addRow(QPushButton_Widget1)
         layout1.addRow(self.OutputBox)
+        self.setLayout(layout1)
 
         # Default Values
         self.Prog_Accuracy_Gain = ""
@@ -435,7 +436,6 @@ class VoltageMeasurementDialog(QDialog):
         AdvancedSettingsList.append(self.UpTime)
         AdvancedSettingsList.append(self.DownTime)
         AdvancedSettingsList.append(self.Terminal)
-        self.setLayout(layout1)
         QLineEdit_PSU_VisaAddress.textEdited.connect(self.PSU_VisaAddress_changed)
         QLineEdit_DMM_V_VisaAddress.textEdited.connect(self.DMM_V_VisaAddress_changed)
         QLineEdit_DMM_I_VisaAddress.textEdited.connect(self.DMM_I_VisaAddress_changed)
@@ -480,7 +480,7 @@ class VoltageMeasurementDialog(QDialog):
         self.DMM_I = "USB0::0x2A8D::0x0201::MY57702174::0::INSTR"
 
     def ELoad_VisaAddress_changed(self, s):
-        self.ELoad = "USB0::0x2A8D::0x5C02::MY62100065::0::INSTR"
+        self.ELoad = "USB0::0x2A8D::0x5C02::MY00000033::0::INSTR"
 
     def ELoad_Channel_changed(self, s):
         self.ELoad_Channel = 1
@@ -605,6 +605,7 @@ class VoltageMeasurementDialog(QDialog):
             ELoad=self.ELoad,
             ELoad_Channel=self.ELoad_Channel,
             PSU_Channel=self.PSU_Channel,
+
             VoltageSense=self.VoltageSense,
             VoltageRes=self.VoltageRes,
             CurrentSense=self.CurrentSense,
@@ -1564,10 +1565,10 @@ class CV_LoadRegulationDialog(QDialog):
         AdvancedSettingsList[5] = s
 
     def Error_Gain_changed(self, s):
-        self.Error_Gain = 0.00035
+        self.Error_Gain = 0.0001
 
     def Error_Offset_changed(self, s):
-        self.Error_Offset = 0.0015
+        self.Error_Offset = 0.002
 
     def Power_Rating_changed(self, s):
         self.Power_Rating = 200
@@ -1588,46 +1589,13 @@ class CV_LoadRegulationDialog(QDialog):
         self.DMM = "USB0::0x2A8D::0x0201::MY57702180::0::INSTR"
 
     def ELoad_VisaAddress_changed(self, s):
-        self.ELoad = "USB0::0x2A8D::0x5C02::MY62100065::0::INSTR"
+        self.ELoad = "USB0::0x2A8D::0x5C02::MY00000033::0::INSTR"
 
     def ELoad_Channel_changed(self, s):
         self.ELoad_Channel = 1
 
     def PSU_Channel_changed(self, s):
         self.PSU_Channel = 1
-        
-    # def Error_Gain_changed(self, s):
-    #     self.Error_Gain = s
-
-    # def Error_Offset_changed(self, s):
-    #     self.Error_Offset = s
-
-    # def Power_Rating_changed(self, s):
-    #     self.Power_Rating = s
-
-    # def Max_Current_changed(self, s):
-    #     self.Current_Rating = s
-
-    # def Max_Voltage_changed(self, s):
-    #     self.Voltage_Rating = s
-
-    # def DMM_Instrument_changed(self, s):
-    #     self.DMM_Instrument = s
-
-    # def PSU_VisaAddress_changed(self, s):
-    #     self.PSU = s
-
-    # def DMM_VisaAddress_changed(self, s):
-    #     self.DMM = s
-
-    # def ELoad_VisaAddress_changed(self, s):
-    #     self.ELoad = s
-
-    # def ELoad_Channel_changed(self, s):
-    #     self.ELoad_Channel = s
-
-    # def PSU_Channel_changed(self, s):
-    #     self.PSU_Channel = s
 
     def set_Function_changed(self, s):
         if s == "Voltage Priority":
@@ -1647,6 +1615,12 @@ class CV_LoadRegulationDialog(QDialog):
             self.VoltageSense = "INT"
         elif s == "4 Wire":
             self.VoltageSense = "EXT"
+
+    # def checkbox_state_Report(self, s):
+    #     self.checkbox_data_Report = s
+
+    # def checkbox_state_Image(self, s):
+    #     self.checkbox_data_Image = s
 
     def setRange(self, value):
         AdvancedSettingsList[0] = value
@@ -1688,6 +1662,7 @@ class CV_LoadRegulationDialog(QDialog):
             ELoad=self.ELoad,
             ELoad_Channel=self.ELoad_Channel,
             PSU_Channel=self.PSU_Channel,
+            
             VoltageSense=self.VoltageSense,
             VoltageRes=self.VoltageRes,
             setFunction=self.setFunction,
@@ -1724,6 +1699,7 @@ class CV_LoadRegulationDialog(QDialog):
 
             if self.DMM_Instrument == "Keysight":
                 try:
+                    self.OutputBox.append("start")
                     LoadRegulation.executeCV_LoadRegulationB(self, dict)
 
                 except Exception as e:
@@ -1882,8 +1858,10 @@ class CC_LoadRegulationDialog(QDialog):
         self.DMM_Instrument = "Keysight"
 
         self.setFunction = "Voltage"
-        self.VoltageRes = "SLOW"
-        self.VoltageSense = "INT"
+        # self.VoltageRes = "SLOW"
+        # self.VoltageSense = "INT"
+        self.CurrentRes = "SLOW"
+        self.CurrentSense = "INT"
         self.checkbox_data_Report = 2
         self.checkbox_data_Image = 2
         self.Range = "Auto"
@@ -1920,10 +1898,10 @@ class CC_LoadRegulationDialog(QDialog):
         QPushButton_Widget2.clicked.connect(self.openDialog)
 
     def Error_Gain_changed(self, s):
-        self.Error_Gain = 0.00035
+        self.Error_Gain = 0.0001
 
     def Error_Offset_changed(self, s):
-        self.Error_Offset = 0.0015
+        self.Error_Offset = 0.00025
 
     def Power_Rating_changed(self, s):
         self.Power_Rating = 200
@@ -2046,7 +2024,9 @@ class CC_LoadRegulationDialog(QDialog):
 
             if self.DMM_Instrument == "Keysight":
                 try:
+                    self.OutputBox.append("start")
                     LoadRegulation.executeCC_LoadRegulationB(self, dict)
+
 
                 except Exception as e:
                     QMessageBox.warning(self, "Error", str(e))
