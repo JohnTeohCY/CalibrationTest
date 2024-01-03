@@ -1038,7 +1038,7 @@ class LoadRegulation:
         else:
             Sense(dict["DMM"]).setVoltageRangeDC(dict["Range"])
 
-        self.V_Rating = float(dict["V_Rating"]) # + 0.1   # 0.1V is added to prevent ELoad from entering CC Mode
+        self.V_Rating = float(dict["V_Rating"]) 
         self.I_Rating = float(dict["I_Rating"])
         self.P_Rating = float(dict["P_Rating"])
         self.param1 = float(dict["Error_Gain"])
@@ -1083,11 +1083,11 @@ class LoadRegulation:
                 break
 
         Delay(dict["PSU"]).write(dict["DownTime"])
-        print("V_NL: ", V_NL, "V_FL: ", V_FL)
+        print("Voltage (No load): ", V_NL, "Voltage (Full load): ", V_FL)
         Output(dict["ELoad"]).setOutputStateC("OFF", dict["ELoad_Channel"])
         Output(dict["PSU"]).setOutputState("OFF")
         Voltage_Regulation = ((V_NL - V_FL) / V_FL) * 100
-        Desired_Voltage_Regulation = 30 * self.param1 + self.param2
+        Desired_Voltage_Regulation = ((self.V_Rating * self.param1) + self.param2) * 100
         print("Desired Load Regulation (CV): (%)", Desired_Voltage_Regulation)
         print("Calculated Load Voltage Regulation (CV): (%)", round(Voltage_Regulation, 4))
 
@@ -1203,11 +1203,11 @@ class LoadRegulation:
             del temp_string
 
         Delay(dict["PSU"]).write(dict["DownTime"])
-        print("I_NL: ", I_NL, "I_FL: ", I_FL)
+        print("Current (No load): ", I_NL, "Current (Full load): ", I_FL)
         Output(dict["ELoad"]).setOutputStateC("OFF", dict["ELoad_Channel"])
         Output(dict["PSU"]).setOutputState("OFF")
         Voltage_Regulation = ((I_NL - I_FL) / I_FL) * 100
-        Desired_Voltage_Regulation = 30 * self.param1 + self.param2
+        Desired_Voltage_Regulation = 20 * self.param1 + self.param2
         print("Desired Load Regulation(CC): (%)", Desired_Voltage_Regulation)
         print("Calculated Load Regulation(CC): (%)", round(Voltage_Regulation, 4))
 
@@ -1294,7 +1294,7 @@ class LoadRegulation:
             Sense(dict["DMM"]).setCurrentRangeDC(dict["Range"])
 
         self.V_Rating = float(dict["V_Rating"])
-        self.I_Rating = float(dict["I_Rating"]) # + 0.1  # 0.1A is added to prevent ELoad from entering CV Mode
+        self.I_Rating = float(dict["I_Rating"]) 
         self.P_Rating = float(dict["P_Rating"])
         self.param1 = float(dict["Error_Gain"])
         self.param2 = float(dict["Error_Offset"])
@@ -1339,9 +1339,10 @@ class LoadRegulation:
                 break
 
         Delay(dict["PSU"]).write(dict["DownTime"])
-        print("I_NL: ", I_NL, "I_FL: ", I_FL)
+        print("Current (No load): ", I_NL, "Current (Full load): ", I_FL)
         Output(dict["ELoad"]).setOutputStateC("OFF", dict["ELoad_Channel"])
         Output(dict["PSU"]).setOutputState("OFF")
+
         Current_Regulation = ((I_NL - I_FL) / I_FL) * 100
         Desired_Current_Regulation = self.I_Rating * self.param1 + self.param2
         print("Desired Load Regulation (CC): (%)", Desired_Current_Regulation)

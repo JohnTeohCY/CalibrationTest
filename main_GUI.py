@@ -1510,7 +1510,7 @@ class CV_LoadRegulationDialog(QDialog):
 
         self.setFunction = "Current"
         self.VoltageRes = "SLOW"
-        self.VoltageSense = "EXT"
+        self.VoltageSense = "INT"
         self.checkbox_data_Report = 2
         self.checkbox_data_Image = 2
         self.Range = "Auto"
