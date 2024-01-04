@@ -111,10 +111,10 @@ class tab(QTabWidget):
 
     def CC_LoadRegulationUI(self):
         pixmap_LoadRegulationCC = QPixmap(
-            ".//images//GUI//4.png"
+            ".//images//GUI//4new.png"
         )
         pixmap_LoadRegulationCC = pixmap_LoadRegulationCC.scaled(
-            700, 550, Qt.KeepAspectRatio, Qt.FastTransformation
+            450, 400, Qt.KeepAspectRatio, Qt.FastTransformation
         )
         label_LoadRegulationCC = QLabel()
         label_LoadRegulationCC.setPixmap(pixmap_LoadRegulationCC)
@@ -1546,23 +1546,23 @@ class CV_LoadRegulationDialog(QDialog):
         QPushButton_Widget1.clicked.connect(self.executeTest)
         QPushButton_Widget2.clicked.connect(self.openDialog)
 
-    def RangeChanged(self, s):
-        AdvancedSettingsList[0] = s
+    # def RangeChanged(self, s):
+    #     AdvancedSettingsList[0] = s
 
-    def ApertureChanged(self, s):
-        AdvancedSettingsList[1] = s
+    # def ApertureChanged(self, s):
+    #     AdvancedSettingsList[1] = s
 
-    def AutoZeroChanged(self, s):
-        AdvancedSettingsList[2] = s
+    # def AutoZeroChanged(self, s):
+    #     AdvancedSettingsList[2] = s
 
-    def InputZChanged(self, s):
-        AdvancedSettingsList[3] = s
+    # def InputZChanged(self, s):
+    #     AdvancedSettingsList[3] = s
 
-    def UpTimeChanged(self, s):
-        AdvancedSettingsList[4] = s
+    # def UpTimeChanged(self, s):
+    #     AdvancedSettingsList[4] = s
 
-    def DownTimeChanged(self, s):
-        AdvancedSettingsList[5] = s
+    # def DownTimeChanged(self, s):
+    #     AdvancedSettingsList[5] = s
 
     def Error_Gain_changed(self, s):
         self.Error_Gain = 0.0001
@@ -1666,6 +1666,7 @@ class CV_LoadRegulationDialog(QDialog):
             VoltageSense=self.VoltageSense,
             VoltageRes=self.VoltageRes,
             setFunction=self.setFunction,
+
             Range=AdvancedSettingsList[0],
             Aperture=AdvancedSettingsList[1],
             AutoZero=AdvancedSettingsList[2],
@@ -1699,7 +1700,6 @@ class CV_LoadRegulationDialog(QDialog):
 
             if self.DMM_Instrument == "Keysight":
                 try:
-                    self.OutputBox.append("start")
                     LoadRegulation.executeCV_LoadRegulationB(self, dict)
 
                 except Exception as e:
@@ -1767,6 +1767,7 @@ class CC_LoadRegulationDialog(QDialog):
         Desp1.setText("Connections:")
         Desp2.setText("General Settings:")
         Desp3.setText("Specification:")
+        Desp4.setText("Shunt:")
 
         # Connections
         QLabel_PSU_VisaAddress = QLabel()
@@ -1825,6 +1826,11 @@ class CC_LoadRegulationDialog(QDialog):
         QComboBox_set_Function.setEnabled(False)
         QComboBox_Voltage_Sense.addItems(["2 Wire", "4 Wire"])
 
+        # Shunt 
+        QLabel_Shunt = QLabel()
+        QLabel_Shunt.setText("Resistance (Ohm):")
+        QLineEdit_Shunt = QLineEdit()
+
         layout1.addRow(Desp1)
         layout1.addRow(QLabel_PSU_VisaAddress, QLineEdit_PSU_VisaAddress)
         layout1.addRow(QLabel_DMM_VisaAddress, QLineEdit_DMM_VisaAddress)
@@ -1841,12 +1847,15 @@ class CC_LoadRegulationDialog(QDialog):
         layout1.addRow(QLabel_Max_Current, QLineEdit_Max_Current)
         layout1.addRow(QLabel_Error_Gain, QLineEdit_Error_Gain)
         layout1.addRow(QLabel_Error_Offset, QLineEdit_Error_Offset)
+        layout1.addRow(Desp4)
+        layout1.addRow(QLabel_Shunt, QLineEdit_Shunt)
         layout1.addRow(QPushButton_Widget2)
         layout1.addRow(QPushButton_Widget1)
         layout1.addRow(self.OutputBox)
         self.setLayout(layout1)
 
         # Default Values
+        self.shuntResistance = ""
         self.Power_Rating = ""
         self.Current_Rating = ""
         self.Voltage_Rating = ""
@@ -1858,23 +1867,25 @@ class CC_LoadRegulationDialog(QDialog):
         self.DMM_Instrument = "Keysight"
 
         self.setFunction = "Voltage"
-        # self.VoltageRes = "SLOW"
-        # self.VoltageSense = "INT"
-        self.CurrentRes = "SLOW"
+        self.VoltageRes = "SLOW"
+        self.VoltageSense = "INT"
+        # self.CurrentRes = "SLOW"
         self.CurrentSense = "INT"
         self.checkbox_data_Report = 2
         self.checkbox_data_Image = 2
         self.Range = "Auto"
         self.Aperture = "10"
         self.AutoZero = "ON"
-        self.Terminal = "3A"
+        # self.Terminal = "3A"
+        self.inputZ = "ON"
         self.UpTime = "50"
         self.DownTime = "50"
 
         AdvancedSettingsList.append(self.Range)
         AdvancedSettingsList.append(self.Aperture)
         AdvancedSettingsList.append(self.AutoZero)
-        AdvancedSettingsList.append(self.Terminal)
+        # AdvancedSettingsList.append(self.Terminal)
+        AdvancedSettingsList.append(self.inputZ)
         AdvancedSettingsList.append(self.UpTime)
         AdvancedSettingsList.append(self.DownTime)
         QLineEdit_PSU_VisaAddress.textEdited.connect(self.PSU_VisaAddress_changed)
@@ -1892,6 +1903,7 @@ class CC_LoadRegulationDialog(QDialog):
             self.set_VoltageSense_changed
         )
         QComboBox_DMM_Instrument.currentTextChanged.connect(self.DMM_Instrument_changed)
+        QLineEdit_Shunt.textEdited.connect(self.shuntResistance_changed)
         # QCheckBox_Report_Widget.stateChanged.connect(self.checkbox_state_Report)
         # QCheckBox_Image_Widget.stateChanged.connect(self.checkbox_state_Image)
         QPushButton_Widget1.clicked.connect(self.executeTest)
@@ -1919,16 +1931,19 @@ class CC_LoadRegulationDialog(QDialog):
         self.PSU = "USB0::0x2A8D::0x5C02::MY62100050::0::INSTR"
 
     def DMM_VisaAddress_changed(self, s):
-        self.DMM = "USB0::0x2A8D::0x0201::MY57702180::0::INSTR"
+        self.DMM = "USB0::0x2A8D::0x0201::MY57702174::0::INSTR"
 
     def ELoad_VisaAddress_changed(self, s):
-        self.ELoad = "USB0::0x2A8D::0x5C02::MY62100065::0::INSTR"
+        self.ELoad = "USB0::0x2A8D::0x5C02::MY00000033::0::INSTR"
 
     def ELoad_Channel_changed(self, s):
         self.ELoad_Channel = 1
 
     def PSU_Channel_changed(self, s):
         self.PSU_Channel = 1
+
+    def shuntResistance_changed(self, s):
+        self.shuntResistance = 1
 
     def set_Function_changed(self, s):
         if s == "Voltage Priority":
@@ -1940,14 +1955,23 @@ class CC_LoadRegulationDialog(QDialog):
         elif s == "Resistance Priority":
             self.setFunction = "Resistance"
 
-    def set_VoltageRes_changed(self, s):
-        self.CurrentRes = s
+    # def set_VoltageRes_changed(self, s):
+    #     self.CurrentRes = s
 
-    def set_VoltageSense_changed(self, s):
+    def set_CurrentSense_changed(self, s):
         if s == "2 Wire":
             self.CurrentSense = "INT"
         elif s == "4 Wire":
             self.CurrentSense = "EXT"
+            
+    def set_VoltageRes_changed(self, s):
+        self.VoltageRes = s
+
+    def set_VoltageSense_changed(self, s):
+        if s == "2 Wire":
+            self.VoltageSense = "INT"
+        elif s == "4 Wire":
+            self.VoltageSense = "EXT"
 
     def setRange(self, value):
         AdvancedSettingsList[0] = value
@@ -1958,7 +1982,9 @@ class CC_LoadRegulationDialog(QDialog):
     def setAutoZero(self, value):
         AdvancedSettingsList[2] = value
 
-    def setTerminal(self, value):
+    # def setTerminal(self, value):
+    #     AdvancedSettingsList[3] = value
+    def setInputZ(self, value):
         AdvancedSettingsList[3] = value
 
     def setUpTime(self, value):
@@ -1989,12 +2015,18 @@ class CC_LoadRegulationDialog(QDialog):
             ELoad=self.ELoad,
             ELoad_Channel=self.ELoad_Channel,
             PSU_Channel=self.PSU_Channel,
+
             CurrentSense=self.CurrentSense,
+            VoltageSense=self.VoltageSense,
+            VoltageRes=self.VoltageRes,
+
             setFunction=self.setFunction,
+            shuntResistance=self.shuntResistance,
             Range=AdvancedSettingsList[0],
             Aperture=AdvancedSettingsList[1],
             AutoZero=AdvancedSettingsList[2],
-            Terminal=AdvancedSettingsList[3],
+            # Terminal=AdvancedSettingsList[3],
+            InputZ=AdvancedSettingsList[3],
             UpTime=AdvancedSettingsList[4],
             DownTime=AdvancedSettingsList[5],
         )
@@ -2024,10 +2056,7 @@ class CC_LoadRegulationDialog(QDialog):
 
             if self.DMM_Instrument == "Keysight":
                 try:
-                    self.OutputBox.append("start")
                     LoadRegulation.executeCC_LoadRegulationB(self, dict)
-
-
                 except Exception as e:
                     QMessageBox.warning(self, "Error", str(e))
                     exit()
@@ -2035,7 +2064,6 @@ class CC_LoadRegulationDialog(QDialog):
             elif self.DMM_Instrument == "Keithley":
                 try:
                     LoadRegulation.executeCC_LoadRegulationA(self, dict)
-
                 except Exception as e:
                     QMessageBox.warning(self, "Error", str(e))
                     exit()

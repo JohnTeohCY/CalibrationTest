@@ -1278,20 +1278,23 @@ class LoadRegulation:
         ) = Dimport.getClasses(dict["Instrument"])
 
         # Instruments Initialization
-        Configure(dict["DMM"]).write("Current")
+        Configure(dict["DMM"]).write("Voltage")
         Trigger(dict["DMM"]).setSource("BUS")
+        Sense(dict["DMM"]).setVoltageResDC(dict["VoltageRes"])
+        Voltage(dict["DMM"]).setNPLC(dict["Aperture"])
+        Voltage(dict["DMM"]).setAutoZeroMode(dict["AutoZero"])
+        Voltage(dict["DMM"]).setAutoImpedanceMode(dict["InputZ"])
+        if dict["Range"] == "Auto":
+            Sense(dict["DMM"]).setVoltageRangeDCAuto()
+        else:
+            Sense(dict["DMM"]).setVoltageRangeDC(dict["Range"])
+
         Display(dict["ELoad"]).displayState(dict["ELoad_Channel"])
         Function(dict["ELoad"]).setMode(dict["setFunction"], dict["ELoad_Channel"])
+
+        # UNSURE CURRENT SENSE OR VOLTAGE SENSE BUT IT DOES PRODUCE SOME SLIGHT DIFFERENCE IN RESULT
+        # Voltage(dict["PSU"]).setSenseMode(dict["VoltageSense"], dict["PSU_Channel"])
         Voltage(dict["PSU"]).setSenseMode(dict["CurrentSense"], dict["PSU_Channel"])
-        Current(dict["DMM"]).setNPLC(dict["Aperture"])
-        Current(dict["DMM"]).setAutoZeroMode(dict["AutoZero"])
-        Current(dict["DMM"]).setTerminal(dict["Terminal"])
-
-        if dict["Range"] == "Auto":
-            Sense(dict["DMM"]).setCurrentRangeDCAuto()
-
-        else:
-            Sense(dict["DMM"]).setCurrentRangeDC(dict["Range"])
 
         self.V_Rating = float(dict["V_Rating"])
         self.I_Rating = float(dict["I_Rating"]) 
@@ -1301,11 +1304,13 @@ class LoadRegulation:
 
         V_Max = self.P_Rating / self.I_Rating
         Apply(dict["PSU"]).write(dict["PSU_Channel"], self.V_Rating, self.I_Rating)
-        Voltage(dict["ELoad"]).setOutputVoltage(1, dict["ELoad_Channel"])
         Output(dict["PSU"]).setOutputState("ON")
-        Output(dict["ELoad"]).setOutputStateC("ON", dict["ELoad_Channel"])
-        # Reading for No Load Voltage
 
+        Output(dict["ELoad"]).shortInput("ON")      # Short the Eload so that the equivalent voltage set is 0 but still allowing current to flow
+        Output(dict["ELoad"]).setOutputStateC("ON", dict["ELoad_Channel"])
+        
+
+        # Reading for No Load Voltage
         WAI(dict["PSU"])
         Initiate(dict["DMM"]).initiate()
         status = float(Status(dict["DMM"]).operationCondition())
@@ -1314,14 +1319,16 @@ class LoadRegulation:
             status = float(Status(dict["DMM"]).operationCondition())
 
             if status == 8704.0:
-                I_NL = float(Fetch(dict["DMM"]).query())
+                I_NL = float(Fetch(dict["DMM"]).query()) / float(dict["shuntResistance"])
                 break
 
             elif status == 512.0:
-                I_NL = float(Fetch(dict["DMM"]).query())
+                I_NL = float(Fetch(dict["DMM"]).query()) / float(dict["shuntResistance"])
                 break
         Delay(dict["PSU"]).write(dict["DownTime"])
-        Voltage(dict["ELoad"]).setOutputVoltage(V_Max - 1, dict["ELoad_Channel"])
+        Output(dict["ELoad"]).shortInput("OFF")
+        Voltage(dict["ELoad"]).setOutputVoltage(V_Max, dict["ELoad_Channel"])
+        Output(dict["ELoad"]).setOutputStateC("ON", dict["ELoad_Channel"])
 
         WAI(dict["ELoad"])
         Initiate(dict["DMM"]).initiate()
@@ -1332,10 +1339,10 @@ class LoadRegulation:
             status = float(Status(dict["DMM"]).operationCondition())
 
             if status == 8704.0:
-                I_FL = float(Fetch(dict["DMM"]).query())
+                I_FL = float(Fetch(dict["DMM"]).query()) / float(dict["shuntResistance"])
                 break
             elif status == 512.0:
-                I_FL = float(Fetch(dict["DMM"]).query())
+                I_FL = float(Fetch(dict["DMM"]).query()) / float(dict["shuntResistance"])
                 break
 
         Delay(dict["PSU"]).write(dict["DownTime"])
@@ -1344,8 +1351,8 @@ class LoadRegulation:
         Output(dict["PSU"]).setOutputState("OFF")
 
         Current_Regulation = ((I_NL - I_FL) / I_FL) * 100
-        Desired_Current_Regulation = self.I_Rating * self.param1 + self.param2
-        print("Desired Load Regulation (CC): (%)", Desired_Current_Regulation)
+        Desired_Current_Regulation = ((self.I_Rating * self.param1) + self.param2) * 100
+        print("Desired Load Regulation (CC): (%)", round(Desired_Current_Regulation,4))
         print("Calculated Load Regulation (CC): (%)", round(Current_Regulation, 4))
 
 
