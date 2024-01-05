@@ -183,7 +183,7 @@ class xlreport_Regulation(object):
             worksheet: string specifying which worksheet the column width to be changed.
             value: integer specifiying the width value to be changed to.
         """
-        for x in ["A", "B", "C", "D", "E", "F", "G", "H", "I"]:
+        for x in ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M"]:
             worksheet.column_dimensions[x].width = value
 
     def alignCell(self, worksheet, row_number, column_number, style):
@@ -215,7 +215,7 @@ class xlreport_Regulation(object):
 
         """
         with pd.ExcelWriter(self.path, engine="openpyxl") as writer:
-            df1 = pd.read_csv("csv/error.csv", index_col=False)
+            df1 = pd.read_csv("csv/data.csv", index_col=False)
             df2 = pd.read_csv(
                 "csv/instrumentData.csv",
                 index_col=False,
@@ -228,7 +228,7 @@ class xlreport_Regulation(object):
             wb = writer.book
             ws = wb["Data"]
 
-            self.adjustcolumnWidth(ws, 16)
+            self.adjustcolumnWidth(ws, 20)
             self.alignCell(ws, 1, 1, "left")
             self.alignCell(ws, 2, 1, "left")
             self.alignCell(ws, 3, 1, "left")

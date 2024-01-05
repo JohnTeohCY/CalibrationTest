@@ -143,12 +143,12 @@ class datatoCSV_Regulation(object):
         VratingF = Vrating.to_frame(name="Voltage Rating")
         IratingF = Irating.to_frame(name="Current Rating")
         PratingF = Prating.to_frame(name="Power Rating")
-        Desired_VregF = Desired_Vreg.to_frame(name="Desired Voltage Regulation")
-        I_eloadF = I_eload.to_frame(name="Current Set (EL)")
+        Desired_VregF = Desired_Vreg.to_frame(name="Desired Volt Regulation")
+        I_eloadF = I_eload.to_frame(name="Current Set(EL)")
         keyF = key.to_frame(name="key")
 
-        VdmmF = Vdmm.to_frame(name="Voltage Measured (DMM)")
-        Calculated_VregF = Calculated_Vreg.to_frame(name="Calculated Voltage Regulation")
+        VdmmF = Vdmm.to_frame(name="Voltage Meas(DMM)")
+        Calculated_VregF = Calculated_Vreg.to_frame(name="Cal Volt Regulation")
 
         CSV1 = pd.concat(
             [
@@ -157,7 +157,7 @@ class datatoCSV_Regulation(object):
                 PratingF,
                 Desired_VregF,
                 I_eloadF,
-                keyF,
+                # keyF,
                 VdmmF,
                 Calculated_VregF,
             ],
