@@ -34,6 +34,7 @@ from src.DUT_Test import (
 )
 from src.data import *
 from src.xlreport import xlreport
+from src.xlreport import xlreport_Regulation
 
 desp_font = QFont("Arial", 10)
 desp_font.setWeight(QFont.Bold)
@@ -1648,8 +1649,11 @@ class CV_LoadRegulationDialog(QDialog):
         begins, the VISA_Addresses of the Instruments are passed through the VISA Resource Manager to make sure there
         are connected. Then the actual DUT Tests will commence. Depending on the users selection, the method can
         optionally export all the details into a CSV file or display a graph after the test is completed.
-
         """
+
+        self.infoList = []
+        self.dataList = []
+
         dict = dictGenerator.input(
             Instrument=self.DMM_Instrument,
             Error_Gain=self.Error_Gain,
@@ -1700,7 +1704,7 @@ class CV_LoadRegulationDialog(QDialog):
 
             if self.DMM_Instrument == "Keysight":
                 try:
-                    LoadRegulation.executeCV_LoadRegulationB(self, dict)
+                    infoList, dataList = LoadRegulation.executeCV_LoadRegulationB(self, dict)
 
                 except Exception as e:
                     QMessageBox.warning(self, "Error", str(e))
@@ -1716,6 +1720,19 @@ class CV_LoadRegulationDialog(QDialog):
 
             self.OutputBox.append(my_result.getvalue())
             self.OutputBox.append("Measurement is complete !")
+
+
+            if self.checkbox_data_Report == 2:
+                instrumentData(self.PSU, self.DMM, self.ELoad)
+                datatoCSV_Regulation(infoList, dataList)
+                # datatoGraph(infoList, dataList, flag_VI=1)
+                # datatoGraph.scatterCompareVoltage(
+                #     self, float(self.Prog_Accuracy_Gain), float(self.Prog_Accuracy_Offset), float(self.Rdbk_Accuracy_Gain), float(self.Rdbk_Accuracy_Offset)
+                # )
+                A = xlreport_Regulation()
+                A.run()
+                df = pd.DataFrame.from_dict(dict,orient="index")
+                df.to_csv("csv/config.csv")
 
     def openDialog(self):
         dlg = AdvancedSetting_Voltage()

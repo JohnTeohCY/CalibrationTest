@@ -10,6 +10,7 @@
 import pyvisa
 import sys
 from time import sleep
+import numpy as np
 
 sys.path.insert(
     1,
@@ -822,7 +823,8 @@ class CurrentMeasurement:
 
 class LoadRegulation:
     def __init__(self):
-        pass
+        self.infoList = []
+        self.dataList = []
 
     def executeCV_LoadRegulationA(self, dict):
         """Test for determining the Load Regulation of DUT under Constant Voltage (CV) Mode.
@@ -1029,14 +1031,14 @@ class LoadRegulation:
         Voltage(dict["DMM"]).setAutoZeroMode(dict["AutoZero"])
         Voltage(dict["DMM"]).setAutoImpedanceMode(dict["InputZ"])
 
-        Display(dict["ELoad"]).displayState(dict["ELoad_Channel"])
-        Function(dict["ELoad"]).setMode(dict["setFunction"], dict["ELoad_Channel"])
-        Voltage(dict["PSU"]).setSenseMode(dict["VoltageSense"], dict["PSU_Channel"])
-
         if dict["Range"] == "Auto":
             Sense(dict["DMM"]).setVoltageRangeDCAuto()
         else:
             Sense(dict["DMM"]).setVoltageRangeDC(dict["Range"])
+
+        Display(dict["ELoad"]).displayState(dict["ELoad_Channel"])
+        Function(dict["ELoad"]).setMode(dict["setFunction"], dict["ELoad_Channel"])
+        Voltage(dict["PSU"]).setSenseMode(dict["VoltageSense"], dict["PSU_Channel"])
 
         self.V_Rating = float(dict["V_Rating"]) 
         self.I_Rating = float(dict["I_Rating"])
@@ -1044,19 +1046,21 @@ class LoadRegulation:
         self.param1 = float(dict["Error_Gain"])
         self.param2 = float(dict["Error_Offset"])
 
-        I_Max = self.P_Rating / self.V_Rating
+        I_Max = self.P_Rating / self.V_Rating   # For Eload
+        I_range = np.linspace(0, I_Max, 5)    # For Eload
+        Desired_Voltage_Regulation = ((self.V_Rating * self.param1) + self.param2) * 100
+
         Apply(dict["PSU"]).write(dict["PSU_Channel"], self.V_Rating, self.I_Rating)
         Output(dict["PSU"]).setOutputState("ON")
 
         # Reading for No Load Voltage
-
+        k = 0
         WAI(dict["PSU"])
         Initiate(dict["DMM"]).initiate()
         status = float(Status(dict["DMM"]).operationCondition())
         TRG(dict["DMM"])
         while 1:
             status = float(Status(dict["DMM"]).operationCondition())
-
             if status == 8704.0:
                 V_NL = float(Fetch(dict["DMM"]).query())
                 break
@@ -1064,32 +1068,63 @@ class LoadRegulation:
                 V_NL = float(Fetch(dict["DMM"]).query())
                 break
         Delay(dict["PSU"]).write(dict["DownTime"])
-        Current(dict["ELoad"]).setOutputCurrent(I_Max, dict["ELoad_Channel"])
-        Output(dict["ELoad"]).setOutputStateC("ON", dict["ELoad_Channel"])
 
-        WAI(dict["ELoad"])
-        Initiate(dict["DMM"]).initiate()
-        status = float(Status(dict["DMM"]).operationCondition())
-        TRG(dict["DMM"])
-        Delay(dict["PSU"]).write(dict["UpTime"])
-        while 1:
+        self.infoList.insert(0, 
+                             [self.V_Rating, 
+                              self.I_Rating, 
+                              self.P_Rating,
+                              Desired_Voltage_Regulation, 
+                              I_range[0],
+                              k])
+        self.dataList.insert(0, 
+                             [V_NL, 
+                              0])
+        
+        print("no load: ", V_NL)
+        print("desired: ", Desired_Voltage_Regulation)
+
+        # Reading for Full Load Voltage
+        k += 1
+        for i, element in enumerate(I_range[1:]):
+            Current(dict["ELoad"]).setOutputCurrent(element, dict["ELoad_Channel"])
+            Output(dict["ELoad"]).setOutputStateC("ON", dict["ELoad_Channel"])
+
+            self.infoList.insert(i+1, 
+                                 [self.V_Rating, 
+                                  self.I_Rating, 
+                                  self.P_Rating,
+                                  Desired_Voltage_Regulation, 
+                                  element,
+                                  k])
+
+            WAI(dict["PSU"])
+            Initiate(dict["DMM"]).initiate()
             status = float(Status(dict["DMM"]).operationCondition())
+            TRG(dict["DMM"])
+            while 1:
+                status = float(Status(dict["DMM"]).operationCondition())
+                if status == 8704.0:
+                    V_DMM = float(Fetch(dict["DMM"]).query())
+                    break
+                elif status == 512.0:
+                    V_DMM = float(Fetch(dict["DMM"]).query())
+                    break
+            Delay(dict["PSU"]).write(dict["DownTime"])
 
-            if status == 8704.0:
-                V_FL = float(Fetch(dict["DMM"]).query())
-                break
-            elif status == 512.0:
-                V_FL = float(Fetch(dict["DMM"]).query())
-                break
+            Voltage_Regulation = ((V_NL - V_DMM) / V_DMM) * 100
+            self.dataList.insert(
+                        i+1, 
+                        [V_DMM, 
+                         Voltage_Regulation])
+            k += 1
+            print("eload: ", element)
+            print("Voltage (Full load): ", V_DMM)
+            print("Calculated Load Voltage Regulation (CV): (%)", round(Voltage_Regulation, 4))
 
-        Delay(dict["PSU"]).write(dict["DownTime"])
-        print("Voltage (No load): ", V_NL, "Voltage (Full load): ", V_FL)
         Output(dict["ELoad"]).setOutputStateC("OFF", dict["ELoad_Channel"])
         Output(dict["PSU"]).setOutputState("OFF")
-        Voltage_Regulation = ((V_NL - V_FL) / V_FL) * 100
-        Desired_Voltage_Regulation = ((self.V_Rating * self.param1) + self.param2) * 100
-        print("Desired Load Regulation (CV): (%)", Desired_Voltage_Regulation)
-        print("Calculated Load Voltage Regulation (CV): (%)", round(Voltage_Regulation, 4))
+
+        return self.infoList, self.dataList
 
     def executeCC_LoadRegulationA(self, dict):
         """Test for determining the Load Regulation of DUT under Constant Current (CC) Mode.
