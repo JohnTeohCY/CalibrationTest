@@ -6,7 +6,7 @@ DUT-TestBot is a simple python-based program that is developed to automate commo
 ## Usage Guide
 
 ### Requirements
-`python >=3.10.12` Latest version of Python can be downloaded from [here](https://www.python.org/downloads/).
+`python >=3.11.2` The version of Python can be downloaded from [here](https://www.python.org/downloads/).
 
 ### 1. Clone a local repository
 ```sh
