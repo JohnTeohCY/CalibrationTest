@@ -472,34 +472,34 @@ class VoltageMeasurementDialog(QDialog):
         self.DMM_Instrument = s
 
     def PSU_VisaAddress_changed(self, s):
-        self.PSU = "USB0::0x2A8D::0x5C02::MY62100050::0::INSTR"
+        self.PSU = s
 
     def DMM_V_VisaAddress_changed(self, s):
-        self.DMM_V = "USB0::0x2A8D::0x0201::MY57702180::0::INSTR"
+        self.DMM_V = s
 
     def DMM_I_VisaAddress_changed(self, s):
-        self.DMM_I = "USB0::0x2A8D::0x0201::MY57702174::0::INSTR"
+        self.DMM_I = s
 
     def ELoad_VisaAddress_changed(self, s):
-        self.ELoad = "USB0::0x2A8D::0x5C02::MY00000033::0::INSTR"
+        self.ELoad = s
 
     def ELoad_Channel_changed(self, s):
-        self.ELoad_Channel = 1
+        self.ELoad_Channel = s
 
     def PSU_Channel_changed(self, s):
-        self.PSU_Channel = 1
+        self.PSU_Channel = s
 
     def Prog_Accuracy_Gain_changed(self, s):
-        self.Prog_Accuracy_Gain = 0.00025
+        self.Prog_Accuracy_Gain = s
 
     def Prog_Accuracy_Offset_changed(self, s):
-        self.Prog_Accuracy_Offset = 0.0015
+        self.Prog_Accuracy_Offset = s
 
     def Rdbk_Accuracy_Gain_changed(self, s):
-        self.Rdbk_Accuracy_Gain = 0.00025
+        self.Rdbk_Accuracy_Gain = s
 
     def Rdbk_Accuracy_Offset_changed(self, s):
-        self.Rdbk_Accuracy_Offset = 0.0015
+        self.Rdbk_Accuracy_Offset = s
 
     def shuntResistance_changed(self, s):
         self.shuntResistance = s
@@ -936,34 +936,34 @@ class CurrentMeasurementDialog(QDialog):
         self.DMM_Instrument = s
 
     def PSU_VisaAddress_changed(self, s):
-        self.PSU = "USB0::0x2A8D::0x5C02::MY62100050::0::INSTR"
+        self.PSU = s
 
     def DMM_V_VisaAddress_changed(self, s):
-        self.DMM_V = "USB0::0x2A8D::0x0201::MY57702180::0::INSTR"
+        self.DMM_V = s
 
     def DMM_I_VisaAddress_changed(self, s):
-        self.DMM_I = "USB0::0x2A8D::0x0201::MY57702174::0::INSTR"
+        self.DMM_I = s
 
     def ELoad_VisaAddress_changed(self, s):
-        self.ELoad = "USB0::0x2A8D::0x5C02::MY62100065::0::INSTR"
+        self.ELoad = s
 
     def ELoad_Channel_changed(self, s):
-        self.ELoad_Channel = 1
+        self.ELoad_Channel = s
 
     def PSU_Channel_changed(self, s):
-        self.PSU_Channel = 1
+        self.PSU_Channel = s
 
     def Prog_Accuracy_Gain_changed(self, s):
-        self.Prog_Accuracy_Gain = 0.00035
+        self.Prog_Accuracy_Gain = s
 
     def Prog_Accuracy_Offset_changed(self, s):
-        self.Prog_Accuracy_Offset = 0.0015
+        self.Prog_Accuracy_Offset = s
 
     def Rdbk_Accuracy_Gain_changed(self, s):
-        self.Rdbk_Accuracy_Gain = 0.00025
+        self.Rdbk_Accuracy_Gain = s
 
     def Rdbk_Accuracy_Offset_changed(self, s):
-        self.Rdbk_Accuracy_Offset = 0.0015
+        self.Rdbk_Accuracy_Offset = s
 
     def shuntResistance_changed(self, s):
         self.shuntResistance = s
@@ -1542,61 +1542,41 @@ class CV_LoadRegulationDialog(QDialog):
             self.set_VoltageSense_changed
         )
         QComboBox_DMM_Instrument.currentTextChanged.connect(self.DMM_Instrument_changed)
-        # QCheckBox_Report_Widget.stateChanged.connect(self.checkbox_state_Report)
-        # QCheckBox_Image_Widget.stateChanged.connect(self.checkbox_state_Image)
         QPushButton_Widget1.clicked.connect(self.executeTest)
         QPushButton_Widget2.clicked.connect(self.openDialog)
 
-    # def RangeChanged(self, s):
-    #     AdvancedSettingsList[0] = s
-
-    # def ApertureChanged(self, s):
-    #     AdvancedSettingsList[1] = s
-
-    # def AutoZeroChanged(self, s):
-    #     AdvancedSettingsList[2] = s
-
-    # def InputZChanged(self, s):
-    #     AdvancedSettingsList[3] = s
-
-    # def UpTimeChanged(self, s):
-    #     AdvancedSettingsList[4] = s
-
-    # def DownTimeChanged(self, s):
-    #     AdvancedSettingsList[5] = s
-
     def Error_Gain_changed(self, s):
-        self.Error_Gain = 0.0001
+        self.Error_Gain = s
 
     def Error_Offset_changed(self, s):
-        self.Error_Offset = 0.002
+        self.Error_Offset = s
 
     def Power_Rating_changed(self, s):
-        self.Power_Rating = 200
+        self.Power_Rating = s
 
     def Max_Current_changed(self, s):
-        self.Current_Rating = 20
+        self.Current_Rating = s
 
     def Max_Voltage_changed(self, s):
-        self.Voltage_Rating = 30
+        self.Voltage_Rating = s
 
     def DMM_Instrument_changed(self, s):
         self.DMM_Instrument = s
 
     def PSU_VisaAddress_changed(self, s):
-        self.PSU = "USB0::0x2A8D::0x5C02::MY62100050::0::INSTR"
+        self.PSU = s
 
     def DMM_VisaAddress_changed(self, s):
-        self.DMM = "USB0::0x2A8D::0x0201::MY57702180::0::INSTR"
+        self.DMM = s
 
     def ELoad_VisaAddress_changed(self, s):
-        self.ELoad = "USB0::0x2A8D::0x5C02::MY00000033::0::INSTR"
+        self.ELoad = s
 
     def ELoad_Channel_changed(self, s):
-        self.ELoad_Channel = 1
+        self.ELoad_Channel = s
 
     def PSU_Channel_changed(self, s):
-        self.PSU_Channel = 1
+        self.PSU_Channel = s
 
     def set_Function_changed(self, s):
         if s == "Voltage Priority":
@@ -1616,12 +1596,6 @@ class CV_LoadRegulationDialog(QDialog):
             self.VoltageSense = "INT"
         elif s == "4 Wire":
             self.VoltageSense = "EXT"
-
-    # def checkbox_state_Report(self, s):
-    #     self.checkbox_data_Report = s
-
-    # def checkbox_state_Image(self, s):
-    #     self.checkbox_data_Image = s
 
     def setRange(self, value):
         AdvancedSettingsList[0] = value
@@ -1725,10 +1699,6 @@ class CV_LoadRegulationDialog(QDialog):
             if self.checkbox_data_Report == 2:
                 instrumentData(self.PSU, self.DMM, self.ELoad)
                 datatoCSV_Regulation(infoList, dataList)
-                # datatoGraph(infoList, dataList, flag_VI=1)
-                # datatoGraph.scatterCompareVoltage(
-                #     self, float(self.Prog_Accuracy_Gain), float(self.Prog_Accuracy_Offset), float(self.Rdbk_Accuracy_Gain), float(self.Rdbk_Accuracy_Offset)
-                # )
                 A = xlreport_Regulation()
                 A.run()
                 df = pd.DataFrame.from_dict(dict,orient="index")
@@ -1886,14 +1856,12 @@ class CC_LoadRegulationDialog(QDialog):
         self.setFunction = "Voltage"
         self.VoltageRes = "SLOW"
         self.VoltageSense = "INT"
-        # self.CurrentRes = "SLOW"
         self.CurrentSense = "INT"
         self.checkbox_data_Report = 2
         self.checkbox_data_Image = 2
         self.Range = "Auto"
         self.Aperture = "10"
         self.AutoZero = "ON"
-        # self.Terminal = "3A"
         self.inputZ = "ON"
         self.UpTime = "50"
         self.DownTime = "50"
@@ -1901,7 +1869,6 @@ class CC_LoadRegulationDialog(QDialog):
         AdvancedSettingsList.append(self.Range)
         AdvancedSettingsList.append(self.Aperture)
         AdvancedSettingsList.append(self.AutoZero)
-        # AdvancedSettingsList.append(self.Terminal)
         AdvancedSettingsList.append(self.inputZ)
         AdvancedSettingsList.append(self.UpTime)
         AdvancedSettingsList.append(self.DownTime)
@@ -1921,46 +1888,44 @@ class CC_LoadRegulationDialog(QDialog):
         )
         QComboBox_DMM_Instrument.currentTextChanged.connect(self.DMM_Instrument_changed)
         QLineEdit_Shunt.textEdited.connect(self.shuntResistance_changed)
-        # QCheckBox_Report_Widget.stateChanged.connect(self.checkbox_state_Report)
-        # QCheckBox_Image_Widget.stateChanged.connect(self.checkbox_state_Image)
         QPushButton_Widget1.clicked.connect(self.executeTest)
         QPushButton_Widget2.clicked.connect(self.openDialog)
 
     def Error_Gain_changed(self, s):
-        self.Error_Gain = 0.0001
+        self.Error_Gain = s
 
     def Error_Offset_changed(self, s):
-        self.Error_Offset = 0.00025
+        self.Error_Offset = s
 
     def Power_Rating_changed(self, s):
-        self.Power_Rating = 200
+        self.Power_Rating = s
 
     def Max_Current_changed(self, s):
-        self.Current_Rating = 20
+        self.Current_Rating = s
 
     def Max_Voltage_changed(self, s):
-        self.Voltage_Rating = 30
+        self.Voltage_Rating = s
 
     def DMM_Instrument_changed(self, s):
         self.DMM_Instrument = s
 
     def PSU_VisaAddress_changed(self, s):
-        self.PSU = "USB0::0x2A8D::0x5C02::MY62100050::0::INSTR"
+        self.PSU = s
 
     def DMM_VisaAddress_changed(self, s):
-        self.DMM = "USB0::0x2A8D::0x0201::MY57702174::0::INSTR"
+        self.DMM = s
 
     def ELoad_VisaAddress_changed(self, s):
-        self.ELoad = "USB0::0x2A8D::0x5C02::MY00000033::0::INSTR"
+        self.ELoad = s
 
     def ELoad_Channel_changed(self, s):
-        self.ELoad_Channel = 1
+        self.ELoad_Channel = s
 
     def PSU_Channel_changed(self, s):
-        self.PSU_Channel = 1
+        self.PSU_Channel = s
 
     def shuntResistance_changed(self, s):
-        self.shuntResistance = 1
+        self.shuntResistance = s
 
     def set_Function_changed(self, s):
         if s == "Voltage Priority":
@@ -1971,9 +1936,6 @@ class CC_LoadRegulationDialog(QDialog):
 
         elif s == "Resistance Priority":
             self.setFunction = "Resistance"
-
-    # def set_VoltageRes_changed(self, s):
-    #     self.CurrentRes = s
 
     def set_CurrentSense_changed(self, s):
         if s == "2 Wire":
@@ -1999,8 +1961,6 @@ class CC_LoadRegulationDialog(QDialog):
     def setAutoZero(self, value):
         AdvancedSettingsList[2] = value
 
-    # def setTerminal(self, value):
-    #     AdvancedSettingsList[3] = value
     def setInputZ(self, value):
         AdvancedSettingsList[3] = value
 
@@ -2042,7 +2002,6 @@ class CC_LoadRegulationDialog(QDialog):
             Range=AdvancedSettingsList[0],
             Aperture=AdvancedSettingsList[1],
             AutoZero=AdvancedSettingsList[2],
-            # Terminal=AdvancedSettingsList[3],
             InputZ=AdvancedSettingsList[3],
             UpTime=AdvancedSettingsList[4],
             DownTime=AdvancedSettingsList[5],

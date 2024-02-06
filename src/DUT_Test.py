@@ -17,7 +17,6 @@ sys.path.insert(
     r"library//"
 )
 
-
 from library.IEEEStandard import OPC, WAI, TRG, RST
 
 
@@ -228,17 +227,6 @@ class VoltageMeasurement:
             Sense(dict["DMM_I"]).setVoltageRangeDCAuto()
         else:
             Sense(dict["DMM_I"]).setVoltageRangeDC(dict["Range"])
-
-        # Configure(dict["DMM_I"]).write("Current")
-        # Trigger(dict["DMM_I"]).setSource("BUS")
-        # Sense(dict["DMM_I"]).setCurrentResDC(dict["CurrentRes"])
-        # Current(dict["DMM_I"]).setNPLC(dict["Aperture"])
-        # Current(dict["DMM_I"]).setAutoZeroMode(dict["AutoZero"])
-        # Current(dict["DMM_I"]).setTerminal(10)
-        # if dict["Range"] == "Auto":
-        #     Sense(dict["DMM_I"]).setCurrentRangeDCAuto()
-        # else:
-        #     Sense(dict["DMM_I"]).setCurrentRangeDC(dict["Range"])
 
         self.param1 = dict["Prog_Accuracy_Gain"]
         self.param2 = dict["Prog_Accuracy_Offset"]
@@ -568,16 +556,6 @@ class CurrentMeasurement:
             Sense(dict["DMM_I"]).setVoltageRangeDCAuto()
         else:
             Sense(dict["DMM_I"]).setVoltageRangeDC(dict["Range"])
-        # Configure(dict["DMM_I"]).write("Current")
-        # Trigger(dict["DMM_I"]).setSource("BUS")
-        # Sense(dict["DMM_I"]).setCurrentResDC(dict["CurrentRes"])
-        # Current(dict["DMM_I"]).setNPLC(dict["Aperture"])
-        # Current(dict["DMM_I"]).setAutoZeroMode(dict["AutoZero"])
-        # Current(dict["DMM_I"]).setTerminal(10)
-        # if dict["Range"] == "Auto":
-        #     Sense(dict["DMM_I"]).setCurrentRangeDCAuto()
-        # else:
-        #     Sense(dict["DMM_I"]).setCurrentRangeDC(dict["Range"])
 
         Display(dict["ELoad"]).displayState(dict["ELoad_Channel"])
         Function(dict["ELoad"]).setMode(dict["setFunction"], dict["ELoad_Channel"])
@@ -893,16 +871,12 @@ class LoadRegulation:
             Oscilloscope,
         ) = Dimport.getClasses(dict["Instrument"])
 
-        print("1")
-
         # Instrument Initializations
         Configure(dict["DMM"]).write("Voltage")
         Trigger(dict["DMM"]).setSource("BUS")
         Voltage(dict["DMM"]).setNPLC(dict["Aperture"])
         Voltage(dict["DMM"]).setAutoZeroMode(dict["AutoZero"])
         Voltage(dict["DMM"]).setAutoImpedanceMode(dict["InputZ"])
-
-
 
         if dict["Range"] == "Auto":
             Sense(dict["DMM"]).setVoltageRangeDCAuto()
@@ -912,8 +886,6 @@ class LoadRegulation:
         Display(dict["ELoad"]).displayState(dict["ELoad_Channel"])
         Function(dict["ELoad"]).setMode(dict["setFunction"], dict["ELoad_Channel"])
         Voltage(dict["PSU"]).setSenseMode(dict["CurrentSense"], dict["PSU_Channel"])
-
-
 
         self.V_Rating = float(dict["V_Rating"])
         self.I_Rating = float(dict["I_Rating"])

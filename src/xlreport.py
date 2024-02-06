@@ -127,7 +127,6 @@ class xlreport(object):
             )
 
             self.adjustcolumnWidth(ws, 16)
-            # self.adjustcolumnWidth(ws, 15)
             self.alignCell(ws, 1, 1, "left")
             self.alignCell(ws, 2, 1, "left")
             self.alignCell(ws, 3, 1, "left")
