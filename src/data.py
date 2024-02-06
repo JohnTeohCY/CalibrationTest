@@ -21,7 +21,7 @@ class datatoCSV_Accuracy(object):
 
     """
 
-    def __init__(self, infoList, dataList):
+    def __init__(self, infoList, dataList, flag_VI):
         """This function initializes the preprocessing of data and generate CSV file
 
             This function begins by extracting the list provided as an arguement into
@@ -49,6 +49,7 @@ class datatoCSV_Accuracy(object):
         Iset = pd.Series(self.column(infoList, 1))
         Key = pd.Series(self.column(infoList, 2))
         Mode = pd.Series(self.column(infoList, 3))
+        VIfix = pd.Series(self.column(infoList, 4))
 
         Vmeasured = pd.Series(self.column(dataList, 0))
         Imeasured = pd.Series(self.column(dataList, 1))
@@ -67,8 +68,15 @@ class datatoCSV_Accuracy(object):
         Irdbk_error = Iset - Ireadback
         IPrdbk_error = Irdbk_error / Iset * 100
 
-        VsetF = Vset.to_frame(name="Voltage Set")
-        IsetF = Iset.to_frame(name="Current Set")
+        if flag_VI == 1:
+            VsetF = Vset.to_frame(name="Voltage Set (PS)")
+            IsetF = Iset.to_frame(name="Current Set (EL)")
+            VIfixF = VIfix.to_frame(name="Current set (PS)")
+        elif flag_VI == 2:
+            VsetF = Vset.to_frame(name="Voltage Set (EL)")
+            IsetF = Iset.to_frame(name="Current Set (PS)")
+            VIfixF = VIfix.to_frame(name="Voltage set (PS)")
+
         keyF = Key.to_frame(name="key")
         modeF = Mode.to_frame(name="Mode")
         VreadbackF = Vreadback.to_frame(name="Voltage Rdbk")
@@ -90,6 +98,7 @@ class datatoCSV_Accuracy(object):
             [
                 VsetF,
                 IsetF,
+                VIfixF,
                 modeF,
                 VreadbackF,
                 IreadbackF,
@@ -119,107 +128,41 @@ class datatoCSV_Accuracy(object):
         """
         return [row[i] for row in matrix]
 
-
 class datatoCSV_Regulation(object):
-    """This class is used to preprocess the data collected for Load Regulation Tests and export CSV Files"""
+    def __init__(self, infoList, dataList):
+        Vrating = pd.Series(self.column(infoList, 0))
+        Irating = pd.Series(self.column(infoList, 1))
+        Prating = pd.Series(self.column(infoList, 2))
+        Desired_Vreg = pd.Series(self.column(infoList, 3))
+        I_eload = pd.Series(self.column(infoList, 4))
+        key = pd.Series(self.column(infoList, 5))
 
-    def __init__(self, infoList, dataList, V_rating, param1, param2, V_NL):
-        """This function initializes the preprocessing of data and generate CSV file
+        Vdmm = pd.Series(self.column(dataList, 0))
+        Calculated_Vreg = pd.Series(self.column(dataList, 1))
 
-            The function begins by extracting the data from the list passed as an arguement
-            into different columns labeled. The Voltage Regulation is then calculated using
-            these information.
+        VratingF = Vrating.to_frame(name="Voltage Rating")
+        IratingF = Irating.to_frame(name="Current Rating")
+        PratingF = Prating.to_frame(name="Power Rating")
+        Desired_VregF = Desired_Vreg.to_frame(name="Desired Volt Regulation")
+        I_eloadF = I_eload.to_frame(name="Current Set(EL)")
+        keyF = key.to_frame(name="key")
 
-            A plot is then made using the dataframes collected above. A scatter of the Voltage
-            Regulation is plotted with a horizontal line of a y axis of the voltage regulation
-            determined by the desired specifications. Condition is provided that if the voltage
-            regulation at the point is lower than the voltage regulation boundary, the scatter
-            point will be visibilly larger and red.
+        VdmmF = Vdmm.to_frame(name="Voltage Meas(DMM)")
+        Calculated_VregF = Calculated_Vreg.to_frame(name="Cal Volt Regulation")
 
-        Args:
-            infoList: List containing all the data that is sent from the program.
-            dataList: List containing all the data that is collected from the DUT.
-            V_NL: List containing the nominal value when voltage is measured during no load.
-            V_FL: Float containing the nominal value when voltage is measured during full load.
-            Current_Programmed: Column containing the nominal value to program the output current of DUT.
-            Voltage_Programmed: Column containing the nominal value to program the output voltage of DUT.
-            Load_Measured: Float containing the nominal value of total Load of DUT.
-            Voltage_Error: Column containing the calculated voltage error.
-            Voltage_Regulation: Column containing the calculated voltage regulation.
-
-        """
-        self.infoList = infoList
-        self.dataList = dataList
-        self.V_NL = V_NL
-        self.Current_Programmed = pd.Series(self.column(infoList, 0))
-        self.Load_Programmed = pd.Series(self.column(infoList, 1))
-        self.Voltage_Measured = pd.Series(self.column(dataList, 0))
-        self.Load_Measured = pd.Series(self.column(dataList, 1))
-
-        self.Voltage_Error = V_NL - self.Voltage_Measured
-        self.Voltage_Regulation = ((V_NL - self.Voltage_Error) / self.V_NL) * 100
-        self.Voltage_Regulation_ErrorBoundary = (V_rating * param1) + param2
-        self.Voltage_Regulation_Boundary = (
-            (V_rating - self.Voltage_Regulation_ErrorBoundary) / self.V_NL
-        ) * 100
-
-        self.condition = self.Voltage_Regulation > self.Voltage_Regulation_Boundary
-
-        self.Current_ProgrammedF = self.Current_Programmed.to_frame(name="Current Set")
-        self.Load_ProgrammedF = self.Load_Programmed.to_frame(name="Load Set")
-        self.Voltage_MeasuredF = self.Voltage_Measured.to_frame(name="Voltage Measured")
-        self.Load_MeasuredF = self.Load_Measured.to_frame(name="Load Measured")
-
-        self.Voltage_ErrorF = self.Voltage_Error.to_frame(name="Voltage Absolute Error")
-        self.Voltage_RegulationF = self.Voltage_Regulation.to_frame(
-            name="Voltage Regulation(%)"
-        )
-        print(self.Voltage_Regulation_Boundary)
-        self.conditionF = self.condition.to_frame(name="Condition")
-
-        self.z = self.condition.to_numpy()
-        self.colour_condition = np.where(self.z == True, "black", "red")
-        self.size_condition = np.where(self.z == True, 6, 12)
-        self.alpha_condition = np.where(self.z == True, 0, 1)
-
-        self.CSV1 = pd.concat(
+        CSV1 = pd.concat(
             [
-                self.Current_ProgrammedF,
-                self.Load_ProgrammedF,
-                self.Voltage_MeasuredF,
-                self.Load_MeasuredF,
-                self.Voltage_ErrorF,
-                self.Voltage_RegulationF,
-                self.conditionF,
+                VratingF,
+                IratingF,
+                PratingF,
+                Desired_VregF,
+                I_eloadF,
+                VdmmF,
+                Calculated_VregF,
             ],
             axis=1,
         )
-
-        self.CSV1.to_csv("csv/data.csv", index=False)
-
-        plt.scatter(
-            self.Current_Programmed,
-            self.Voltage_Regulation,
-            color=self.colour_condition,
-            s=self.size_condition,
-            alpha=self.alpha_condition,
-        )
-        plt.axhline(
-            y=self.Voltage_Regulation_Boundary,
-            color="r",
-            linestyle="-",
-            label="Boundary",
-        )
-
-        plt.plot(
-            self.Current_Programmed,
-            self.Voltage_Regulation,
-            label="Voltage Regulation(%)",
-            color="blue",
-            linewidth=1,
-        )
-        plt.legend(loc="lower left")
-        plt.show()
+        CSV1.to_csv("csv/data.csv", index=False)
 
     def column(self, matrix, i):
         """Function to convert rows of data from list to a column
@@ -230,12 +173,11 @@ class datatoCSV_Regulation(object):
         """
         return [row[i] for row in matrix]
 
-
 class datatoGraph(datatoCSV_Accuracy):
     """Child class of datatoCSV_Accuracy to plot the graph"""
 
-    def __init__(self, infoList, dataList):
-        super().__init__(infoList, dataList)
+    def __init__(self, infoList, dataList, flag_VI):
+        super().__init__(infoList, dataList, flag_VI)
         self.data = pd.read_csv("csv/data.csv")
 
     def errorBoundary(self, param1, param2, UNIT, x, x_err, y):
@@ -305,9 +247,9 @@ class datatoGraph(datatoCSV_Accuracy):
             plt.plot(
                 x,
                 x_err,
-                label="Current = " + str(y.iloc[0]["Current Set"]),
+                label="Current = " + str(y.iloc[0]["Current Set (EL)"]),
             )
-
+            # plt.legend(loc="upper left")
             plt.title(UNIT)
             plt.xlabel("Voltage (V)")
             plt.ylabel("Percentage Error (%)")
@@ -356,9 +298,9 @@ class datatoGraph(datatoCSV_Accuracy):
             plt.plot(
                 x,
                 x_err,
-                label="Voltage = " + str(y.iloc[0]["Voltage Set"]),
+                label="Voltage = " + str(y.iloc[0]["Voltage Set (EL)"]),
             )
-            plt.legend(loc="upper left")
+            # plt.legend(loc="upper left")
             plt.title(UNIT)
             plt.xlabel("Current (A)")
             plt.ylabel("Percentage Error (%)")
@@ -396,11 +338,10 @@ class datatoGraph(datatoCSV_Accuracy):
         conditionC_rdbk = pd.Series()
 
         for x in range(len(grouped_df)):
-            Vset = grouped_df.get_group(x)[["Voltage Set"]]
-            Iset = grouped_df.get_group(x)[["Current Set"]]
+            Vset = grouped_df.get_group(x)[["Voltage Set (PS)"]]
+            Iset = grouped_df.get_group(x)[["Current Set (EL)"]]
             Vpercent_error_meas = grouped_df.get_group(x)[["Volt Meas_Err(%)"]]
             Vpercent_error_rdbk = grouped_df.get_group(x)[["Volt Rdbk_Err(%)"]]
-            # Ipercent_error = grouped_df.get_group(x)[["Curr Meas_Err(%)"]]
 
             VsetS = Vset.squeeze()
             Vpercent_errorS_meas = Vpercent_error_meas.squeeze()
@@ -476,7 +417,7 @@ class datatoGraph(datatoCSV_Accuracy):
             plt.plot(
                 VsetS,
                 Vpercent_errorS_meas,
-                label="Current = " + str(Iset.iloc[0]["Current Set"]),
+                label="Current = " + str(Iset.iloc[0]["Current Set (EL)"]),
             )
 
             plt.title("Voltage")
@@ -516,16 +457,12 @@ class datatoGraph(datatoCSV_Accuracy):
         upper_error_limitF_rdbk = pd.DataFrame(
             upper_error_limitC_rdbk, columns=["+-V_EboundRdbk"]
         )
-        # lower_error_limitF = pd.DataFrame(
-        #     lower_error_limitC, columns=["Lower Err Bound"]
-        # )
 
         ungrouped_df.drop(columns=["key"], inplace=True)
         self.CSV2 = pd.concat(
             [
                 ungrouped_df,
                 upper_error_limitF_meas,
-                # lower_error_limitF,
                 conditionFF_meas,
                 upper_error_limitF_rdbk,
                 conditionFF_rdbk,
@@ -571,9 +508,8 @@ class datatoGraph(datatoCSV_Accuracy):
         conditionC_rdbk = pd.Series()
 
         for x in range(len(grouped_df)):
-            Vset = grouped_df.get_group(x)[["Voltage Set"]]
-            Iset = grouped_df.get_group(x)[["Current Set"]]
-            # Vpercent_error = grouped_df.get_group(x)[["Volt Meas_Err(%)"]]
+            Vset = grouped_df.get_group(x)[["Voltage Set (EL)"]]
+            Iset = grouped_df.get_group(x)[["Current Set (PS)"]]
             Ipercent_error_meas = grouped_df.get_group(x)[["Curr Meas_Err(%)"]]
             Ipercent_error_rdbk = grouped_df.get_group(x)[["Curr Meas_Err(%)"]]
 
@@ -651,7 +587,7 @@ class datatoGraph(datatoCSV_Accuracy):
             plt.plot(
                 IsetS,
                 Ipercent_errorS_meas,
-                label="Voltage = " + str(Vset.iloc[0]["Voltage Set"]),
+                label="Voltage = " + str(Vset.iloc[0]["Voltage Set (EL)"]),
             )
 
             plt.title("Current")
@@ -697,7 +633,6 @@ class datatoGraph(datatoCSV_Accuracy):
             [
                 ungrouped_df,
                 upper_error_limitF_meas,
-                # lower_error_limitF,
                 conditionFF_meas,
                 upper_error_limitF_rdbk,
                 conditionFF_rdbk,

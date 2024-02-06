@@ -34,6 +34,7 @@ from src.DUT_Test import (
 )
 from src.data import *
 from src.xlreport import xlreport
+from src.xlreport import xlreport_Regulation
 
 desp_font = QFont("Arial", 10)
 desp_font.setWeight(QFont.Bold)
@@ -66,10 +67,10 @@ class tab(QTabWidget):
 
     def VoltageAccuracyUI(self):
         pixmap_VoltageAccuracy = QPixmap(
-            ".//images//GUI//1.png"
+            ".//images//GUI//1new.png"
         )
         pixmap_VoltageAccuracy = pixmap_VoltageAccuracy.scaled(
-            800, 600, Qt.KeepAspectRatio, Qt.FastTransformation
+            450, 400, Qt.KeepAspectRatio, Qt.FastTransformation
         )
         label_VoltageAccuracy = QLabel()
         label_VoltageAccuracy.setPixmap(pixmap_VoltageAccuracy)
@@ -81,10 +82,10 @@ class tab(QTabWidget):
 
     def CurrentAccuracyUI(self):
         pixmap_CurrentAccuracy = QPixmap(
-            ".//images//GUI//2.png"
+            ".//images//GUI//1new.png"
         )
         pixmap_CurrentAccuracy = pixmap_CurrentAccuracy.scaled(
-            800, 600, Qt.KeepAspectRatio, Qt.FastTransformation
+            450, 400, Qt.KeepAspectRatio, Qt.FastTransformation
         )
         label_CurrentAccuracy = QLabel()
         label_CurrentAccuracy.setPixmap(pixmap_CurrentAccuracy)
@@ -99,7 +100,7 @@ class tab(QTabWidget):
             ".//images//GUI//3.png"
         )
         pixmap_LoadRegulationCV = pixmap_LoadRegulationCV.scaled(
-            800, 600, Qt.KeepAspectRatio, Qt.FastTransformation
+            700, 500, Qt.KeepAspectRatio, Qt.FastTransformation
         )
         label_LoadRegulationCV = QLabel()
         label_LoadRegulationCV.setPixmap(pixmap_LoadRegulationCV)
@@ -111,10 +112,10 @@ class tab(QTabWidget):
 
     def CC_LoadRegulationUI(self):
         pixmap_LoadRegulationCC = QPixmap(
-            ".//images//GUI//4.png"
+            ".//images//GUI//4new.png"
         )
         pixmap_LoadRegulationCC = pixmap_LoadRegulationCC.scaled(
-            800, 550, Qt.KeepAspectRatio, Qt.FastTransformation
+            450, 400, Qt.KeepAspectRatio, Qt.FastTransformation
         )
         label_LoadRegulationCC = QLabel()
         label_LoadRegulationCC.setPixmap(pixmap_LoadRegulationCC)
@@ -258,15 +259,18 @@ class VoltageMeasurementDialog(QDialog):
         Desp2 = QLabel()
         Desp3 = QLabel()
         Desp4 = QLabel()
+        Desp5 = QLabel()
         Desp1.setFont(desp_font)
         Desp2.setFont(desp_font)
         Desp3.setFont(desp_font)
         Desp4.setFont(desp_font)
+        Desp5.setFont(desp_font)
 
         Desp1.setText("Connections:")
         Desp2.setText("General Settings:")
         Desp3.setText("Voltage Sweep:")
         Desp4.setText("Current Sweep:")
+        Desp5.setText("Shunt:")
 
         # Connections
         QLabel_PSU_VisaAddress = QLabel()
@@ -329,6 +333,11 @@ class VoltageMeasurementDialog(QDialog):
         QComboBox_set_Function.setEnabled(False)
         QComboBox_Voltage_Sense.addItems(["2 Wire", "4 Wire"])
 
+        # Shunt 
+        QLabel_Shunt = QLabel()
+        QLabel_Shunt.setText("Resistance (Ohm):")
+        QLineEdit_Shunt = QLineEdit()
+
         # Current Sweep
         QLabel_minCurrent = QLabel()
         QLabel_maxCurrent = QLabel()
@@ -368,6 +377,8 @@ class VoltageMeasurementDialog(QDialog):
         layout1.addRow(QLabel_Prog_Accuracy_Offset, QLineEdit_Prog_Accuracy_Offset)
         layout1.addRow(QLabel_Rdbk_Accuracy_Gain, QLineEdit_Rdbk_Accuracy_Gain)
         layout1.addRow(QLabel_Rdbk_Accuracy_Offset, QLineEdit_Rdbk_Accuracy_Offset)
+        layout1.addRow(Desp5)
+        layout1.addRow(QLabel_Shunt, QLineEdit_Shunt)
         layout1.addRow(Desp3)
         layout1.addRow(QLabel_minVoltage, QLineEdit_minVoltage)
         layout1.addRow(QLabel_maxVoltage, QLineEdit_maxVoltage)
@@ -381,12 +392,14 @@ class VoltageMeasurementDialog(QDialog):
         layout1.addRow(QPushButton_Widget2)
         layout1.addRow(QPushButton_Widget1)
         layout1.addRow(self.OutputBox)
+        self.setLayout(layout1)
 
         # Default Values
         self.Prog_Accuracy_Gain = ""
         self.Prog_Accuracy_Offset = ""
         self.Rdbk_Accuracy_Gain = ""
         self.Rdbk_Accuracy_Offset = ""
+        self.shuntResistance = ""
         self.minCurrent = ""
         self.maxCurrent = ""
         self.current_step_size = ""
@@ -424,7 +437,6 @@ class VoltageMeasurementDialog(QDialog):
         AdvancedSettingsList.append(self.UpTime)
         AdvancedSettingsList.append(self.DownTime)
         AdvancedSettingsList.append(self.Terminal)
-        self.setLayout(layout1)
         QLineEdit_PSU_VisaAddress.textEdited.connect(self.PSU_VisaAddress_changed)
         QLineEdit_DMM_V_VisaAddress.textEdited.connect(self.DMM_V_VisaAddress_changed)
         QLineEdit_DMM_I_VisaAddress.textEdited.connect(self.DMM_I_VisaAddress_changed)
@@ -436,6 +448,8 @@ class VoltageMeasurementDialog(QDialog):
         QLineEdit_Prog_Accuracy_Offset.textEdited.connect(self.Prog_Accuracy_Offset_changed)
         QLineEdit_Rdbk_Accuracy_Gain.textEdited.connect(self.Rdbk_Accuracy_Gain_changed)
         QLineEdit_Rdbk_Accuracy_Offset.textEdited.connect(self.Rdbk_Accuracy_Offset_changed)
+
+        QLineEdit_Shunt.textEdited.connect(self.shuntResistance_changed)
 
         QLineEdit_minVoltage.textEdited.connect(self.minVoltage_changed)
         QLineEdit_maxVoltage.textEdited.connect(self.maxVoltage_changed)
@@ -458,34 +472,37 @@ class VoltageMeasurementDialog(QDialog):
         self.DMM_Instrument = s
 
     def PSU_VisaAddress_changed(self, s):
-        self.PSU = "USB0::0x2A8D::0x5C02::MY62100050::0::INSTR"
+        self.PSU = s
 
     def DMM_V_VisaAddress_changed(self, s):
-        self.DMM_V = "USB0::0x2A8D::0x0201::MY57702180::0::INSTR"
+        self.DMM_V = s
 
     def DMM_I_VisaAddress_changed(self, s):
-        self.DMM_I = "USB0::0x2A8D::0x0201::MY57702174::0::INSTR"
+        self.DMM_I = s
 
     def ELoad_VisaAddress_changed(self, s):
-        self.ELoad = "USB0::0x2A8D::0x3902::MY60260001::0::INSTR"
+        self.ELoad = s
 
     def ELoad_Channel_changed(self, s):
-        self.ELoad_Channel = 1
+        self.ELoad_Channel = s
 
     def PSU_Channel_changed(self, s):
-        self.PSU_Channel = 1
+        self.PSU_Channel = s
 
     def Prog_Accuracy_Gain_changed(self, s):
-        self.Prog_Accuracy_Gain = 0.00025
+        self.Prog_Accuracy_Gain = s
 
     def Prog_Accuracy_Offset_changed(self, s):
-        self.Prog_Accuracy_Offset = 0.0015
+        self.Prog_Accuracy_Offset = s
 
     def Rdbk_Accuracy_Gain_changed(self, s):
-        self.Rdbk_Accuracy_Gain = 0.00025
+        self.Rdbk_Accuracy_Gain = s
 
     def Rdbk_Accuracy_Offset_changed(self, s):
-        self.Rdbk_Accuracy_Offset = 0.0015
+        self.Rdbk_Accuracy_Offset = s
+
+    def shuntResistance_changed(self, s):
+        self.shuntResistance = s
 
     def minVoltage_changed(self, s):
         self.minVoltage = s
@@ -575,6 +592,7 @@ class VoltageMeasurementDialog(QDialog):
             Prog_Accuracy_Offset=self.Prog_Accuracy_Offset,
             Rdbk_Accuracy_Gain=self.Rdbk_Accuracy_Gain,
             Rdbk_Accuracy_Offset=self.Rdbk_Accuracy_Offset,
+            shuntResistance=self.shuntResistance,
 
             minCurrent=self.minCurrent,
             maxCurrent=self.maxCurrent,
@@ -588,6 +606,7 @@ class VoltageMeasurementDialog(QDialog):
             ELoad=self.ELoad,
             ELoad_Channel=self.ELoad_Channel,
             PSU_Channel=self.PSU_Channel,
+
             VoltageSense=self.VoltageSense,
             VoltageRes=self.VoltageRes,
             CurrentSense=self.CurrentSense,
@@ -650,8 +669,8 @@ class VoltageMeasurementDialog(QDialog):
 
             if self.checkbox_data_Report == 2:
                 instrumentData(self.PSU, self.DMM_V, self.ELoad)
-                datatoCSV_Accuracy(infoList, dataList)
-                datatoGraph(infoList, dataList)
+                datatoCSV_Accuracy(infoList, dataList, flag_VI=1)
+                datatoGraph(infoList, dataList, flag_VI=1)
                 datatoGraph.scatterCompareVoltage(
                     self, float(self.Prog_Accuracy_Gain), float(self.Prog_Accuracy_Offset), float(self.Rdbk_Accuracy_Gain), float(self.Rdbk_Accuracy_Offset)
                 )
@@ -700,15 +719,18 @@ class CurrentMeasurementDialog(QDialog):
         Desp2 = QLabel()
         Desp3 = QLabel()
         Desp4 = QLabel()
+        Desp5 = QLabel()
         Desp1.setFont(desp_font)
         Desp2.setFont(desp_font)
         Desp3.setFont(desp_font)
         Desp4.setFont(desp_font)
+        Desp5.setFont(desp_font)
 
         Desp1.setText("Connections:")
         Desp2.setText("General Settings:")
         Desp3.setText("Voltage Sweep:")
         Desp4.setText("Current Sweep:")
+        Desp5.setText("Shunt:")
 
         # Connections
         QLabel_PSU_VisaAddress = QLabel()
@@ -774,6 +796,11 @@ class CurrentMeasurementDialog(QDialog):
         QComboBox_Current_Sense.addItems(["2 Wire", "4 Wire"])
         QComboBox_Range.addItems(["Auto", "10mA", "100mA", "1A", "3A"])
 
+        # Shunt 
+        QLabel_Shunt = QLabel()
+        QLabel_Shunt.setText("Resistance (Ohm):")
+        QLineEdit_Shunt = QLineEdit()
+
         # Current Sweep
         QLabel_minCurrent = QLabel()
         QLabel_maxCurrent = QLabel()
@@ -816,6 +843,8 @@ class CurrentMeasurementDialog(QDialog):
         layout1.addRow(QLabel_Prog_Accuracy_Offset, QLineEdit_Prog_Accuracy_Offset)
         layout1.addRow(QLabel_Rdbk_Accuracy_Gain, QLineEdit_Rdbk_Accuracy_Gain)
         layout1.addRow(QLabel_Rdbk_Accuracy_Offset, QLineEdit_Rdbk_Accuracy_Offset)
+        layout1.addRow(Desp5)
+        layout1.addRow(QLabel_Shunt, QLineEdit_Shunt)
         layout1.addRow(Desp3)
         layout1.addRow(QLabel_minVoltage, QLineEdit_minVoltage)
         layout1.addRow(QLabel_maxVoltage, QLineEdit_maxVoltage)
@@ -835,6 +864,7 @@ class CurrentMeasurementDialog(QDialog):
         self.Prog_Accuracy_Offset = ""
         self.Rdbk_Accuracy_Gain = ""
         self.Rdbk_Accuracy_Offset = ""
+        self.shuntResistance = ""
         self.minCurrent = ""
         self.maxCurrent = ""
         self.current_step_size = ""
@@ -883,6 +913,7 @@ class CurrentMeasurementDialog(QDialog):
         QLineEdit_Prog_Accuracy_Offset.textEdited.connect(self.Prog_Accuracy_Offset_changed)
         QLineEdit_Rdbk_Accuracy_Gain.textEdited.connect(self.Rdbk_Accuracy_Gain_changed)
         QLineEdit_Rdbk_Accuracy_Offset.textEdited.connect(self.Rdbk_Accuracy_Offset_changed)
+        QLineEdit_Shunt.textEdited.connect(self.shuntResistance_changed)
 
         QLineEdit_minVoltage.textEdited.connect(self.minVoltage_changed)
         QLineEdit_maxVoltage.textEdited.connect(self.maxVoltage_changed)
@@ -905,34 +936,37 @@ class CurrentMeasurementDialog(QDialog):
         self.DMM_Instrument = s
 
     def PSU_VisaAddress_changed(self, s):
-        self.PSU = "USB0::0x2A8D::0x5C02::MY62100050::0::INSTR"
+        self.PSU = s
 
     def DMM_V_VisaAddress_changed(self, s):
-        self.DMM_V = "USB0::0x2A8D::0x0201::MY57702180::0::INSTR"
+        self.DMM_V = s
 
     def DMM_I_VisaAddress_changed(self, s):
-        self.DMM_I = "USB0::0x2A8D::0x0201::MY57702174::0::INSTR"
+        self.DMM_I = s
 
     def ELoad_VisaAddress_changed(self, s):
-        self.ELoad = "USB0::0x2A8D::0x3902::MY60260001::0::INSTR"
+        self.ELoad = s
 
     def ELoad_Channel_changed(self, s):
-        self.ELoad_Channel = 1
+        self.ELoad_Channel = s
 
     def PSU_Channel_changed(self, s):
-        self.PSU_Channel = 1
+        self.PSU_Channel = s
 
     def Prog_Accuracy_Gain_changed(self, s):
-        self.Prog_Accuracy_Gain = 0.00035
+        self.Prog_Accuracy_Gain = s
 
     def Prog_Accuracy_Offset_changed(self, s):
-        self.Prog_Accuracy_Offset = 0.0015
+        self.Prog_Accuracy_Offset = s
 
     def Rdbk_Accuracy_Gain_changed(self, s):
-        self.Rdbk_Accuracy_Gain = 0.00025
+        self.Rdbk_Accuracy_Gain = s
 
     def Rdbk_Accuracy_Offset_changed(self, s):
-        self.Rdbk_Accuracy_Offset = 0.0015
+        self.Rdbk_Accuracy_Offset = s
+
+    def shuntResistance_changed(self, s):
+        self.shuntResistance = s
 
     def minVoltage_changed(self, s):
         self.minVoltage = s
@@ -1022,6 +1056,7 @@ class CurrentMeasurementDialog(QDialog):
             Prog_Accuracy_Offset=self.Prog_Accuracy_Offset,
             Rdbk_Accuracy_Gain=self.Rdbk_Accuracy_Gain,
             Rdbk_Accuracy_Offset=self.Rdbk_Accuracy_Offset,
+            shuntResistance=self.shuntResistance,
             minCurrent=self.minCurrent,
             maxCurrent=self.maxCurrent,
             current_step_size=self.current_step_size,
@@ -1098,8 +1133,8 @@ class CurrentMeasurementDialog(QDialog):
 
             if self.checkbox_data_Report == 2:
                 instrumentData(self.PSU, self.DMM_I, self.ELoad)
-                datatoCSV_Accuracy(infoList, dataList)
-                datatoGraph(infoList, dataList)
+                datatoCSV_Accuracy(infoList, dataList, flag_VI=2)
+                datatoGraph(infoList, dataList, flag_VI=2)
                 datatoGraph.scatterCompareCurrent(
                     self, float(self.Prog_Accuracy_Gain), float(self.Prog_Accuracy_Offset), float(self.Rdbk_Accuracy_Gain), float(self.Rdbk_Accuracy_Offset)
                 )
@@ -1476,7 +1511,7 @@ class CV_LoadRegulationDialog(QDialog):
 
         self.setFunction = "Current"
         self.VoltageRes = "SLOW"
-        self.VoltageSense = "EXT"
+        self.VoltageSense = "INT"
         self.checkbox_data_Report = 2
         self.checkbox_data_Image = 2
         self.Range = "Auto"
@@ -1507,28 +1542,8 @@ class CV_LoadRegulationDialog(QDialog):
             self.set_VoltageSense_changed
         )
         QComboBox_DMM_Instrument.currentTextChanged.connect(self.DMM_Instrument_changed)
-        # QCheckBox_Report_Widget.stateChanged.connect(self.checkbox_state_Report)
-        # QCheckBox_Image_Widget.stateChanged.connect(self.checkbox_state_Image)
         QPushButton_Widget1.clicked.connect(self.executeTest)
         QPushButton_Widget2.clicked.connect(self.openDialog)
-
-    def RangeChanged(self, s):
-        AdvancedSettingsList[0] = s
-
-    def ApertureChanged(self, s):
-        AdvancedSettingsList[1] = s
-
-    def AutoZeroChanged(self, s):
-        AdvancedSettingsList[2] = s
-
-    def InputZChanged(self, s):
-        AdvancedSettingsList[3] = s
-
-    def UpTimeChanged(self, s):
-        AdvancedSettingsList[4] = s
-
-    def DownTimeChanged(self, s):
-        AdvancedSettingsList[5] = s
 
     def Error_Gain_changed(self, s):
         self.Error_Gain = s
@@ -1608,8 +1623,11 @@ class CV_LoadRegulationDialog(QDialog):
         begins, the VISA_Addresses of the Instruments are passed through the VISA Resource Manager to make sure there
         are connected. Then the actual DUT Tests will commence. Depending on the users selection, the method can
         optionally export all the details into a CSV file or display a graph after the test is completed.
-
         """
+
+        self.infoList = []
+        self.dataList = []
+
         dict = dictGenerator.input(
             Instrument=self.DMM_Instrument,
             Error_Gain=self.Error_Gain,
@@ -1622,9 +1640,11 @@ class CV_LoadRegulationDialog(QDialog):
             ELoad=self.ELoad,
             ELoad_Channel=self.ELoad_Channel,
             PSU_Channel=self.PSU_Channel,
+            
             VoltageSense=self.VoltageSense,
             VoltageRes=self.VoltageRes,
             setFunction=self.setFunction,
+
             Range=AdvancedSettingsList[0],
             Aperture=AdvancedSettingsList[1],
             AutoZero=AdvancedSettingsList[2],
@@ -1658,7 +1678,7 @@ class CV_LoadRegulationDialog(QDialog):
 
             if self.DMM_Instrument == "Keysight":
                 try:
-                    LoadRegulation.executeCV_LoadRegulationB(self, dict)
+                    infoList, dataList = LoadRegulation.executeCV_LoadRegulationB(self, dict)
 
                 except Exception as e:
                     QMessageBox.warning(self, "Error", str(e))
@@ -1674,6 +1694,15 @@ class CV_LoadRegulationDialog(QDialog):
 
             self.OutputBox.append(my_result.getvalue())
             self.OutputBox.append("Measurement is complete !")
+
+
+            if self.checkbox_data_Report == 2:
+                instrumentData(self.PSU, self.DMM, self.ELoad)
+                datatoCSV_Regulation(infoList, dataList)
+                A = xlreport_Regulation()
+                A.run()
+                df = pd.DataFrame.from_dict(dict,orient="index")
+                df.to_csv("csv/config.csv")
 
     def openDialog(self):
         dlg = AdvancedSetting_Voltage()
@@ -1725,6 +1754,7 @@ class CC_LoadRegulationDialog(QDialog):
         Desp1.setText("Connections:")
         Desp2.setText("General Settings:")
         Desp3.setText("Specification:")
+        Desp4.setText("Shunt:")
 
         # Connections
         QLabel_PSU_VisaAddress = QLabel()
@@ -1783,6 +1813,11 @@ class CC_LoadRegulationDialog(QDialog):
         QComboBox_set_Function.setEnabled(False)
         QComboBox_Voltage_Sense.addItems(["2 Wire", "4 Wire"])
 
+        # Shunt 
+        QLabel_Shunt = QLabel()
+        QLabel_Shunt.setText("Resistance (Ohm):")
+        QLineEdit_Shunt = QLineEdit()
+
         layout1.addRow(Desp1)
         layout1.addRow(QLabel_PSU_VisaAddress, QLineEdit_PSU_VisaAddress)
         layout1.addRow(QLabel_DMM_VisaAddress, QLineEdit_DMM_VisaAddress)
@@ -1799,12 +1834,15 @@ class CC_LoadRegulationDialog(QDialog):
         layout1.addRow(QLabel_Max_Current, QLineEdit_Max_Current)
         layout1.addRow(QLabel_Error_Gain, QLineEdit_Error_Gain)
         layout1.addRow(QLabel_Error_Offset, QLineEdit_Error_Offset)
+        layout1.addRow(Desp4)
+        layout1.addRow(QLabel_Shunt, QLineEdit_Shunt)
         layout1.addRow(QPushButton_Widget2)
         layout1.addRow(QPushButton_Widget1)
         layout1.addRow(self.OutputBox)
         self.setLayout(layout1)
 
         # Default Values
+        self.shuntResistance = ""
         self.Power_Rating = ""
         self.Current_Rating = ""
         self.Voltage_Rating = ""
@@ -1818,19 +1856,20 @@ class CC_LoadRegulationDialog(QDialog):
         self.setFunction = "Voltage"
         self.VoltageRes = "SLOW"
         self.VoltageSense = "INT"
+        self.CurrentSense = "INT"
         self.checkbox_data_Report = 2
         self.checkbox_data_Image = 2
         self.Range = "Auto"
         self.Aperture = "10"
         self.AutoZero = "ON"
-        self.Terminal = "3A"
+        self.inputZ = "ON"
         self.UpTime = "50"
         self.DownTime = "50"
 
         AdvancedSettingsList.append(self.Range)
         AdvancedSettingsList.append(self.Aperture)
         AdvancedSettingsList.append(self.AutoZero)
-        AdvancedSettingsList.append(self.Terminal)
+        AdvancedSettingsList.append(self.inputZ)
         AdvancedSettingsList.append(self.UpTime)
         AdvancedSettingsList.append(self.DownTime)
         QLineEdit_PSU_VisaAddress.textEdited.connect(self.PSU_VisaAddress_changed)
@@ -1848,8 +1887,7 @@ class CC_LoadRegulationDialog(QDialog):
             self.set_VoltageSense_changed
         )
         QComboBox_DMM_Instrument.currentTextChanged.connect(self.DMM_Instrument_changed)
-        # QCheckBox_Report_Widget.stateChanged.connect(self.checkbox_state_Report)
-        # QCheckBox_Image_Widget.stateChanged.connect(self.checkbox_state_Image)
+        QLineEdit_Shunt.textEdited.connect(self.shuntResistance_changed)
         QPushButton_Widget1.clicked.connect(self.executeTest)
         QPushButton_Widget2.clicked.connect(self.openDialog)
 
@@ -1886,6 +1924,9 @@ class CC_LoadRegulationDialog(QDialog):
     def PSU_Channel_changed(self, s):
         self.PSU_Channel = s
 
+    def shuntResistance_changed(self, s):
+        self.shuntResistance = s
+
     def set_Function_changed(self, s):
         if s == "Voltage Priority":
             self.setFunction = "Voltage"
@@ -1896,14 +1937,20 @@ class CC_LoadRegulationDialog(QDialog):
         elif s == "Resistance Priority":
             self.setFunction = "Resistance"
 
-    def set_VoltageRes_changed(self, s):
-        self.CurrentRes = s
-
-    def set_VoltageSense_changed(self, s):
+    def set_CurrentSense_changed(self, s):
         if s == "2 Wire":
             self.CurrentSense = "INT"
         elif s == "4 Wire":
             self.CurrentSense = "EXT"
+            
+    def set_VoltageRes_changed(self, s):
+        self.VoltageRes = s
+
+    def set_VoltageSense_changed(self, s):
+        if s == "2 Wire":
+            self.VoltageSense = "INT"
+        elif s == "4 Wire":
+            self.VoltageSense = "EXT"
 
     def setRange(self, value):
         AdvancedSettingsList[0] = value
@@ -1914,7 +1961,7 @@ class CC_LoadRegulationDialog(QDialog):
     def setAutoZero(self, value):
         AdvancedSettingsList[2] = value
 
-    def setTerminal(self, value):
+    def setInputZ(self, value):
         AdvancedSettingsList[3] = value
 
     def setUpTime(self, value):
@@ -1945,12 +1992,17 @@ class CC_LoadRegulationDialog(QDialog):
             ELoad=self.ELoad,
             ELoad_Channel=self.ELoad_Channel,
             PSU_Channel=self.PSU_Channel,
+
             CurrentSense=self.CurrentSense,
+            VoltageSense=self.VoltageSense,
+            VoltageRes=self.VoltageRes,
+
             setFunction=self.setFunction,
+            shuntResistance=self.shuntResistance,
             Range=AdvancedSettingsList[0],
             Aperture=AdvancedSettingsList[1],
             AutoZero=AdvancedSettingsList[2],
-            Terminal=AdvancedSettingsList[3],
+            InputZ=AdvancedSettingsList[3],
             UpTime=AdvancedSettingsList[4],
             DownTime=AdvancedSettingsList[5],
         )
@@ -1981,7 +2033,6 @@ class CC_LoadRegulationDialog(QDialog):
             if self.DMM_Instrument == "Keysight":
                 try:
                     LoadRegulation.executeCC_LoadRegulationB(self, dict)
-
                 except Exception as e:
                     QMessageBox.warning(self, "Error", str(e))
                     exit()
@@ -1989,7 +2040,6 @@ class CC_LoadRegulationDialog(QDialog):
             elif self.DMM_Instrument == "Keithley":
                 try:
                     LoadRegulation.executeCC_LoadRegulationA(self, dict)
-
                 except Exception as e:
                     QMessageBox.warning(self, "Error", str(e))
                     exit()
